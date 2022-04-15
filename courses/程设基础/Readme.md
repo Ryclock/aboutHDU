@@ -5,5 +5,5 @@
 
 ### 致谢：
 在此非常感谢以下人士：
-  1. 免费编辑器 Code::Blocks 的创作者
+  1. 免费编辑器 Code::Blocks 的创作者和项目者
   2. 网站 http://cpp.magicseng.cn/ 的作者
