@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1638163827 source:d:\codeblocks\text\program\6. conjectures\conjecturses\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<windows.h>
+

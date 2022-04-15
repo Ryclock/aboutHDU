@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1636006714 source:d:\codeblocks\text\tickets_system\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1640578398 source:d:\codeblocks\text\program\9.bit operation\bit operation\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<windows.h>
+	"menu.h"
+	"expasion.h"
+	"basic.h"
+	"application.h"
+
+1640578942 d:\codeblocks\text\program\9.bit operation\bit operation\menu.h
+
+1640574839 d:\codeblocks\text\program\9.bit operation\bit operation\expasion.h
+
+1640575670 d:\codeblocks\text\program\9.bit operation\bit operation\basic.h
+
+1640586920 d:\codeblocks\text\program\9.bit operation\bit operation\application.h
+
