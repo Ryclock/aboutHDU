@@ -1,8 +1,0 @@
-# depslib dependency file v1.0
-1635512835 source:d:\codeblocks\text\numbers\main.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	<windows.h>
-	<math.h>
-
