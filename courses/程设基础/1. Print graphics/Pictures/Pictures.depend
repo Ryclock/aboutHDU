@@ -1,6 +1,0 @@
-# depslib dependency file v1.0
-1635573135 source:d:\codeblocks\text\program\1. print graphics\pictures\main.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-
