@@ -14,5 +14,5 @@
 
 
 ### 在线书籍：（标*：对应营地内可下载PDF版）
-   1. [高等数学第7版上册习题全解指南](https://maifile.cn/pdf/a77895027118.pdf)
-   2. [高等数学第7版下册习题全解指南](https://maifile.cn/pdf/a70892475640.pdf)
+   1. [高等数学第7版上册习题全解指南*](https://maifile.cn/pdf/a77895027118.pdf)
+   2. [高等数学第7版下册习题全解指南*](https://maifile.cn/pdf/a70892475640.pdf)
