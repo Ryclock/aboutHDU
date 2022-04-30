@@ -1,4 +1,4 @@
-### [如何使用HDU专属VPN：](Ryclock/aboutHDU/master/Readme.md)
+### [如何使用HDU专属VPN：](Ryclock/aboutHDU/tools/Readme.md)
   
 ### 创新学分平台：
   http://192.168.101.210/aexp/
