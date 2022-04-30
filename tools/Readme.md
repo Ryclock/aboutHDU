@@ -1,4 +1,4 @@
-### [如何使用HDU专属VPN：](Ryclock/aboutHDU/main/tools/Readme.md)
+### [如何使用HDU专属VPN：](Ryclock/aboutHDU/main/tools/怎么使用杭电VPN？.pdf)
   
 ### 创新学分平台：
   http://192.168.101.210/aexp/
