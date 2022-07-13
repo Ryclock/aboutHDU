@@ -3,19 +3,19 @@
 #include <string.h>
 #include "menu.h"
 
-#define WIDTH 109        // ĞĞ¿í£¬²»°üÀ¨ÆğÊ¼·ûºÍÖÕÖ¹·û
-#define LEFTPOSITION 2   // ×ó²àÑ¡ÏîµÄÃéµã
-#define RIGHTPOSITION 55 // ÓÒ²àÑ¡ÏîµÄÃéµã
-#define STARTSIGN '='    // ²Ëµ¥Í·²¿Ê×ĞĞµÄÕ¼Î»·û
-#define ROWSIGN '*'      // ²Ëµ¥Ö÷ÌåµÄÍ·Î²ĞĞµÄÕ¼Î»·û
-#define COLSIGN '$'      // Ã¿ĞĞµÄÆğÊ¼·ûºÍÖÕÖ¹·û
-#define OPTIONNUM 10     // Ñ¡Ïî×ÜÊı
+#define WIDTH 109        // è¡Œå®½ï¼Œä¸åŒ…æ‹¬èµ·å§‹ç¬¦å’Œç»ˆæ­¢ç¬¦
+#define LEFTPOSITION 2   // å·¦ä¾§é€‰é¡¹çš„ç„ç‚¹
+#define RIGHTPOSITION 55 // å³ä¾§é€‰é¡¹çš„ç„ç‚¹
+#define STARTSIGN '='    // èœå•å¤´éƒ¨é¦–è¡Œçš„å ä½ç¬¦
+#define ROWSIGN '*'      // èœå•ä¸»ä½“çš„å¤´å°¾è¡Œçš„å ä½ç¬¦
+#define COLSIGN '$'      // æ¯è¡Œçš„èµ·å§‹ç¬¦å’Œç»ˆæ­¢ç¬¦
+#define OPTIONNUM 10     // é€‰é¡¹æ€»æ•°
 
-/* È«¾Ö±äÁ¿ */
+/* å…¨å±€å˜é‡ */
 
-char lang = 'C'; // µ±Ç°ÕıÔÚÊ¹ÓÃµÄÓïÑÔ
+char lang = 'C'; // å½“å‰æ­£åœ¨ä½¿ç”¨çš„è¯­è¨€
 
-/* ¾Ö²¿º¯Êı¶¨Òå */
+/* å±€éƒ¨å‡½æ•°å®šä¹‰ */
 
 typedef char *string;
 
@@ -49,7 +49,7 @@ void printEnglishMenu(void);
 
 void printChineseMenu(void);
 
-/* ½Ó¿ÚÊµÏÖ */
+/* æ¥å£å®ç° */
 
 void showMenu(void)
 {
@@ -71,11 +71,11 @@ void showMenu(void)
 
 void printHelp(void)
 {
-    printf("\n\t»¶Ó­Ê¹ÓÃº¼ÖİÌìÆøÇé¿ö¹ÜÀíºÍÔ¤²âÏµÍ³£¬Çë×¢ÒâÒÔÏÂÌáÊ¾£º");
-    printf("\n\t1. Çë½«ËùÓĞÔ´ÎÄ¼şÍ¬Ê±½øĞĞ±àÒë£¬·ñÔò²¿·Ö¹¦ÄÜ¿ÉÄÜ»áÎŞ·¨Ö´ĞĞ");
-    printf("\n\t2. Ö´ĞĞ¡°µ¼ÈëÊı¾İ¡±²Ù×÷Ç°£¬ÇëÈ·±£Êı¾İÔ´ÎÄ¼şµÄÂ·¾¶ÊÇ·ñÕıÈ·(½¨ÒéÊ¹ÓÃ¾ø¶ÔÂ·¾¶)£»");
-    printf("\n\t3. Ö´ĞĞÈÎºÎ²éÑ¯»òÅÅĞò»òÔ¤²â²Ù×÷Ç°£¬ÇëÈ·±£ÒÑ¾­Ö´ĞĞ¹ı¡°µ¼ÈëÊı¾İ¡±²Ù×÷£»");
-    printf("\n\t4. ÇëÎğ¶à´Î¶ÁÈëÊı¾İ£¬¼´¶à´Î³õÊ¼»¯Êı¾İ¿âÊÇ·Ç·¨²Ù×÷");
+    printf("\n\tæ¬¢è¿ä½¿ç”¨æ­å·å¤©æ°”æƒ…å†µç®¡ç†å’Œé¢„æµ‹ç³»ç»Ÿï¼Œè¯·æ³¨æ„ä»¥ä¸‹æç¤ºï¼š");
+    printf("\n\t1. è¯·å°†æ‰€æœ‰æºæ–‡ä»¶åŒæ—¶è¿›è¡Œç¼–è¯‘ï¼Œå¦åˆ™éƒ¨åˆ†åŠŸèƒ½å¯èƒ½ä¼šæ— æ³•æ‰§è¡Œ");
+    printf("\n\t2. æ‰§è¡Œâ€œå¯¼å…¥æ•°æ®â€æ“ä½œå‰ï¼Œè¯·ç¡®ä¿æ•°æ®æºæ–‡ä»¶çš„è·¯å¾„æ˜¯å¦æ­£ç¡®(å»ºè®®ä½¿ç”¨ç»å¯¹è·¯å¾„)ï¼›");
+    printf("\n\t3. æ‰§è¡Œä»»ä½•æŸ¥è¯¢æˆ–æ’åºæˆ–é¢„æµ‹æ“ä½œå‰ï¼Œè¯·ç¡®ä¿å·²ç»æ‰§è¡Œè¿‡â€œå¯¼å…¥æ•°æ®â€æ“ä½œï¼›");
+    printf("\n\t4. è¯·å‹¿å¤šæ¬¡è¯»å…¥æ•°æ®ï¼Œå³å¤šæ¬¡åˆå§‹åŒ–æ•°æ®åº“æ˜¯éæ³•æ“ä½œ");
 }
 
 void switchLanguage(void)
@@ -90,7 +90,7 @@ void switchLanguage(void)
     }
 }
 
-/* ¾Ö²¿º¯ÊıÊµÏÖ */
+/* å±€éƒ¨å‡½æ•°å®ç° */
 
 void printNChar(char ch, int num)
 {
@@ -192,7 +192,7 @@ void printEnglishMenu(void)
                                  "7-Predict the weather for one day in the next year",
                                  "8-Predict the temperature for one day in the next year",
                                  "9-Exit", "0- Change to Chinese Menu"};
-    char *tail = "Made by Ryclock&SYZ&TYC HDU";
+    char *tail = "Made by Ryclock HDU";
     printMenuHead(top, head);
     printMenuBody(options, OPTIONNUM);
     printMenuTail(tail);
@@ -200,12 +200,12 @@ void printEnglishMenu(void)
 
 void printChineseMenu(void)
 {
-    char *top = "²Ëµ¥";
-    char *head = "º¼ÖİÌìÆøÇé¿ö¹ÜÀíºÍÔ¤²âÏµÍ³";
-    string options[OPTIONNUM] = {"1-Ê¹ÓÃËµÃ÷", "2-µ¼ÈëÊı¾İ", "3-²éÑ¯¹ıÈ¥Ä³Ò»ÌìµÄÌìÆøĞÅÏ¢",
-                                 "4-°´ÈÕ×î¸ßÎÂÅÅĞòÄ³¸öÔÂ", "5-°´ÈÕ×îµÍÎÂÅÅĞòÄ³¸öÔÂ", "6-°´ÈÕÎÂ²îÅÅĞòÄ³¸öÔÂ",
-                                 "7-Ô¤²âÏÂÒ»ÄêÄ³Ò»ÌìµÄÌìÆø", "8-Ô¤²âÏÂÒ»ÄêÄ³Ò»ÌìµÄÎÂ¶È", "9-ÍË³öÏµÍ³", "0-ÇĞ»»³ÉÓ¢ÎÄ²Ëµ¥"};
-    char *tail = "ÖÆ×÷Õß @½ªê×éª&ÉòÀÖÕÂ&ÌÀÒÁ³Ç º¼Öİµç×Ó¿Æ¼¼´óÑ§";
+    char *top = "èœå•";
+    char *head = "æ­å·å¤©æ°”æƒ…å†µç®¡ç†å’Œé¢„æµ‹ç³»ç»Ÿ";
+    string options[OPTIONNUM] = {"1-ä½¿ç”¨è¯´æ˜", "2-å¯¼å…¥æ•°æ®", "3-æŸ¥è¯¢è¿‡å»æŸä¸€å¤©çš„å¤©æ°”ä¿¡æ¯",
+                                 "4-æŒ‰æ—¥æœ€é«˜æ¸©æ’åºæŸä¸ªæœˆ", "5-æŒ‰æ—¥æœ€ä½æ¸©æ’åºæŸä¸ªæœˆ", "6-æŒ‰æ—¥æ¸©å·®æ’åºæŸä¸ªæœˆ",
+                                 "7-é¢„æµ‹ä¸‹ä¸€å¹´æŸä¸€å¤©çš„å¤©æ°”", "8-é¢„æµ‹ä¸‹ä¸€å¹´æŸä¸€å¤©çš„æ¸©åº¦", "9-é€€å‡ºç³»ç»Ÿ", "0-åˆ‡æ¢æˆè‹±æ–‡èœå•"};
+    char *tail = "åˆ¶ä½œè€… @å§œæ›œæ¥  æ­å·ç”µå­ç§‘æŠ€å¤§å­¦";
     printMenuHead(top, head);
     printMenuBody(options, OPTIONNUM);
     printMenuTail(tail);
