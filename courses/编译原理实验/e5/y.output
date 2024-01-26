@@ -1,0 +1,3546 @@
+Terminals unused in grammar
+
+    FOR
+
+
+State 218 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: CompUnit $end
+
+    1 CompUnit: FuncDef
+    2         | Decl
+    3         | CompUnit Decl
+    4         | CompUnit FuncDef
+    5         | error
+
+    6 Decl: ConstDecl
+    7     | VarDecl
+
+    8 ConstDecl: CONST_WRAP BType ConstDefList ';'
+    9          | CONST_WRAP BType ConstDefList error
+
+   10 ConstDefList: ConstDef
+   11             | ConstDefList comma_WRAP ConstDef
+
+   12 BType: INT_WRAP
+   13      | FLOAT_WRAP
+   14      | VOID_WRAP
+
+   15 ConstDef: IDENTIFIER_WRAP ConstArrayDef assign_WRAP ConstInitVal
+   16         | IDENTIFIER_WRAP assign_WRAP ConstInitVal
+
+   17 ConstArrayDef: left_bracket_WRAP ConstExp right_bracket_WRAP
+   18              | left_bracket_WRAP ConstExp error right_bracket_WRAP
+   19              | ConstArrayDef left_bracket_WRAP ConstExp right_bracket_WRAP
+   20              | ConstArrayDef left_bracket_WRAP ConstExp error right_bracket_WRAP
+
+   21 ConstInitVal: ConstExp
+   22             | left_brace_WRAP right_brace_WRAP
+   23             | left_brace_WRAP error
+   24             | left_brace_WRAP ConstInitValList right_brace_WRAP
+   25             | left_brace_WRAP ConstInitValList error
+
+   26 ConstInitValList: ConstInitVal
+   27                 | ConstInitValList comma_WRAP ConstInitVal
+
+   28 VarDecl: BType VarDefList ';'
+   29        | BType VarDefList error
+
+   30 VarDefList: VarDef
+   31           | VarDefList comma_WRAP VarDef
+
+   32 VarDef: IDENTIFIER_WRAP
+   33       | IDENTIFIER_WRAP assign_WRAP InitVal
+   34       | IDENTIFIER_WRAP ConstArrayDef
+   35       | IDENTIFIER_WRAP ConstArrayDef assign_WRAP InitVal
+
+   36 ArrayDef: left_bracket_WRAP Exp right_bracket_WRAP
+   37         | left_bracket_WRAP Exp error right_bracket_WRAP
+   38         | ArrayDef left_bracket_WRAP Exp right_bracket_WRAP
+   39         | ArrayDef left_bracket_WRAP Exp error right_bracket_WRAP
+
+   40 InitVal: Exp
+   41        | left_brace_WRAP right_brace_WRAP
+   42        | left_brace_WRAP error
+   43        | left_brace_WRAP InitValList right_brace_WRAP
+   44        | left_brace_WRAP InitValList error
+
+   45 InitValList: InitVal
+   46            | InitValList comma_WRAP InitVal
+
+   47 FuncDef: BType IDENTIFIER_WRAP left_paren_WRAP right_paren_WRAP Block
+   48        | BType IDENTIFIER_WRAP left_paren_WRAP FuncFParams right_paren_WRAP Block
+
+   49 FuncFParams: FuncFParam
+   50            | FuncFParams comma_WRAP FuncFParam
+
+   51 FuncFParam: BType IDENTIFIER_WRAP
+   52           | BType IDENTIFIER_WRAP ArrayDef
+
+   53 Block: left_brace_WRAP right_brace_WRAP
+   54      | left_brace_WRAP BlockItemList right_brace_WRAP
+
+   55 BlockItemList: BlockItem
+   56              | BlockItemList BlockItem
+
+   57 BlockItem: Decl
+   58          | Stmt
+
+   59 Stmt: LVal assign_WRAP Exp ';'
+   60     | LVal assign_WRAP Exp error
+   61     | Exp ';'
+   62     | Exp error
+   63     | Block
+   64     | IF_WRAP left_paren_WRAP Cond right_paren_WRAP Stmt
+   65     | IF_WRAP left_paren_WRAP Cond right_paren_WRAP Stmt ELSE_WRAP Stmt
+   66     | WHILE_WRAP left_paren_WRAP Cond right_paren_WRAP Stmt
+   67     | BREAK_WRAP ';'
+   68     | BREAK_WRAP error
+   69     | CONTINUE_WRAP ';'
+   70     | CONTINUE_WRAP error
+   71     | RETURN_WRAP ';'
+   72     | RETURN_WRAP error
+   73     | RETURN_WRAP Exp ';'
+   74     | RETURN_WRAP Exp error
+
+   75 Exp: AddExp
+
+   76 Cond: LOrExp
+
+   77 LVal: IDENTIFIER_WRAP
+   78     | LVal left_bracket_WRAP Exp right_bracket_WRAP
+   79     | LVal left_bracket_WRAP Exp error right_bracket_WRAP
+
+   80 PrimaryExp: left_paren_WRAP Exp right_paren_WRAP
+   81           | LVal
+   82           | Number
+
+   83 Number: INTVAL_WRAP
+   84       | FLOATVAL_WRAP
+
+   85 UnaryExp: PrimaryExp
+   86         | IDENTIFIER_WRAP left_paren_WRAP right_paren_WRAP
+   87         | IDENTIFIER_WRAP left_paren_WRAP FuncRParams right_paren_WRAP
+   88         | UnaryOp UnaryExp
+
+   89 UnaryOp: plus_WRAP
+   90        | minus_WRAP
+   91        | not_WRAP
+
+   92 FuncRParams: Exp
+   93            | FuncRParams comma_WRAP Exp
+
+   94 MulExp: UnaryExp
+   95       | MulExp mul_WRAP UnaryExp
+   96       | MulExp div_WRAP UnaryExp
+   97       | MulExp mod_WRAP UnaryExp
+
+   98 AddExp: MulExp
+   99       | AddExp plus_WRAP MulExp
+  100       | AddExp minus_WRAP MulExp
+
+  101 RelExp: AddExp
+  102       | RelExp less_WRAP AddExp
+  103       | RelExp greater_WRAP AddExp
+  104       | RelExp LE_WRAP AddExp
+  105       | RelExp GE_WRAP AddExp
+
+  106 EqExp: RelExp
+  107      | EqExp EQ_WRAP RelExp
+  108      | EqExp NE_WRAP RelExp
+
+  109 LAndExp: EqExp
+  110        | LAndExp AND_WRAP EqExp
+
+  111 LOrExp: LAndExp
+  112       | LOrExp OR_WRAP LAndExp
+
+  113 ConstExp: AddExp
+
+  114 INT_WRAP: INT
+
+  115 FLOAT_WRAP: FLOAT
+
+  116 VOID_WRAP: VOID
+
+  117 IDENTIFIER_WRAP: IDENTIFIER
+
+  118 CONST_WRAP: CONST
+
+  119 EQ_WRAP: EQ
+
+  120 NE_WRAP: NE
+
+  121 LE_WRAP: LE
+
+  122 GE_WRAP: GE
+
+  123 AND_WRAP: AND
+
+  124 OR_WRAP: OR
+
+  125 IF_WRAP: IF
+
+  126 ELSE_WRAP: ELSE
+
+  127 WHILE_WRAP: WHILE
+
+  128 RETURN_WRAP: RETURN
+
+  129 BREAK_WRAP: BREAK
+
+  130 CONTINUE_WRAP: CONTINUE
+
+  131 INTVAL_WRAP: INTVAL
+
+  132 FLOATVAL_WRAP: FLOATVAL
+
+  133 plus_WRAP: '+'
+
+  134 minus_WRAP: '-'
+
+  135 mul_WRAP: '*'
+
+  136 div_WRAP: '/'
+
+  137 mod_WRAP: '%'
+
+  138 not_WRAP: '!'
+
+  139 left_paren_WRAP: '('
+
+  140 right_paren_WRAP: ')'
+
+  141 left_brace_WRAP: '{'
+
+  142 right_brace_WRAP: '}'
+
+  143 left_bracket_WRAP: '['
+
+  144 right_bracket_WRAP: ']'
+
+  145 comma_WRAP: ','
+
+  146 less_WRAP: '<'
+
+  147 greater_WRAP: '>'
+
+  148 assign_WRAP: '='
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '!' (33) 138
+    '%' (37) 137
+    '(' (40) 139
+    ')' (41) 140
+    '*' (42) 135
+    '+' (43) 133
+    ',' (44) 145
+    '-' (45) 134
+    '/' (47) 136
+    ';' (59) 8 28 59 61 67 69 71 73
+    '<' (60) 146
+    '=' (61) 148
+    '>' (62) 147
+    '[' (91) 143
+    ']' (93) 144
+    '{' (123) 141
+    '}' (125) 142
+    error (256) 5 9 18 20 23 25 29 37 39 42 44 60 62 68 70 72 74 79
+    EQ (258) 119
+    NE (259) 120
+    LE (260) 121
+    GE (261) 122
+    AND (262) 123
+    OR (263) 124
+    INT (264) 114
+    FLOAT (265) 115
+    VOID (266) 116
+    IF (267) 125
+    ELSE (268) 126
+    WHILE (269) 127
+    RETURN (270) 128
+    BREAK (271) 129
+    CONTINUE (272) 130
+    FOR (273)
+    CONST (274) 118
+    IDENTIFIER <str> (275) 117
+    FLOATVAL <dval> (276) 132
+    INTVAL <ival> (277) 131
+
+
+Nonterminals, with rules where they appear
+
+    $accept (40)
+        on left: 0
+    CompUnit <node> (41)
+        on left: 1 2 3 4 5
+        on right: 0 3 4
+    Decl <node> (42)
+        on left: 6 7
+        on right: 2 3 57
+    ConstDecl <node> (43)
+        on left: 8 9
+        on right: 6
+    ConstDefList <node> (44)
+        on left: 10 11
+        on right: 8 9 11
+    BType <node> (45)
+        on left: 12 13 14
+        on right: 8 9 28 29 47 48 51 52
+    ConstDef <node> (46)
+        on left: 15 16
+        on right: 10 11
+    ConstArrayDef <node> (47)
+        on left: 17 18 19 20
+        on right: 15 19 20 34 35
+    ConstInitVal <node> (48)
+        on left: 21 22 23 24 25
+        on right: 15 16 26 27
+    ConstInitValList <node> (49)
+        on left: 26 27
+        on right: 24 25 27
+    VarDecl <node> (50)
+        on left: 28 29
+        on right: 7
+    VarDefList <node> (51)
+        on left: 30 31
+        on right: 28 29 31
+    VarDef <node> (52)
+        on left: 32 33 34 35
+        on right: 30 31
+    ArrayDef <node> (53)
+        on left: 36 37 38 39
+        on right: 38 39 52
+    InitVal <node> (54)
+        on left: 40 41 42 43 44
+        on right: 33 35 45 46
+    InitValList <node> (55)
+        on left: 45 46
+        on right: 43 44 46
+    FuncDef <node> (56)
+        on left: 47 48
+        on right: 1 4
+    FuncFParams <node> (57)
+        on left: 49 50
+        on right: 48 50
+    FuncFParam <node> (58)
+        on left: 51 52
+        on right: 49 50
+    Block <node> (59)
+        on left: 53 54
+        on right: 47 48 63
+    BlockItemList <node> (60)
+        on left: 55 56
+        on right: 54 56
+    BlockItem <node> (61)
+        on left: 57 58
+        on right: 55 56
+    Stmt <node> (62)
+        on left: 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74
+        on right: 58 64 65 66
+    Exp <node> (63)
+        on left: 75
+        on right: 36 37 38 39 40 59 60 61 62 73 74 78 79 80 92 93
+    Cond <node> (64)
+        on left: 76
+        on right: 64 65 66
+    LVal <node> (65)
+        on left: 77 78 79
+        on right: 59 60 78 79 81
+    PrimaryExp <node> (66)
+        on left: 80 81 82
+        on right: 85
+    Number <node> (67)
+        on left: 83 84
+        on right: 82
+    UnaryExp <node> (68)
+        on left: 85 86 87 88
+        on right: 88 94 95 96 97
+    UnaryOp <node> (69)
+        on left: 89 90 91
+        on right: 88
+    FuncRParams <node> (70)
+        on left: 92 93
+        on right: 87 93
+    MulExp <node> (71)
+        on left: 94 95 96 97
+        on right: 95 96 97 98 99 100
+    AddExp <node> (72)
+        on left: 98 99 100
+        on right: 75 99 100 101 102 103 104 105 113
+    RelExp <node> (73)
+        on left: 101 102 103 104 105
+        on right: 102 103 104 105 106 107 108
+    EqExp <node> (74)
+        on left: 106 107 108
+        on right: 107 108 109 110
+    LAndExp <node> (75)
+        on left: 109 110
+        on right: 110 111 112
+    LOrExp <node> (76)
+        on left: 111 112
+        on right: 76 112
+    ConstExp <node> (77)
+        on left: 113
+        on right: 17 18 19 20 21
+    INT_WRAP <node> (78)
+        on left: 114
+        on right: 12
+    FLOAT_WRAP <node> (79)
+        on left: 115
+        on right: 13
+    VOID_WRAP <node> (80)
+        on left: 116
+        on right: 14
+    IDENTIFIER_WRAP <node> (81)
+        on left: 117
+        on right: 15 16 32 33 34 35 47 48 51 52 77 86 87
+    CONST_WRAP <node> (82)
+        on left: 118
+        on right: 8 9
+    EQ_WRAP <node> (83)
+        on left: 119
+        on right: 107
+    NE_WRAP <node> (84)
+        on left: 120
+        on right: 108
+    LE_WRAP <node> (85)
+        on left: 121
+        on right: 104
+    GE_WRAP <node> (86)
+        on left: 122
+        on right: 105
+    AND_WRAP <node> (87)
+        on left: 123
+        on right: 110
+    OR_WRAP <node> (88)
+        on left: 124
+        on right: 112
+    IF_WRAP <node> (89)
+        on left: 125
+        on right: 64 65
+    ELSE_WRAP <node> (90)
+        on left: 126
+        on right: 65
+    WHILE_WRAP <node> (91)
+        on left: 127
+        on right: 66
+    RETURN_WRAP <node> (92)
+        on left: 128
+        on right: 71 72 73 74
+    BREAK_WRAP <node> (93)
+        on left: 129
+        on right: 67 68
+    CONTINUE_WRAP <node> (94)
+        on left: 130
+        on right: 69 70
+    INTVAL_WRAP <node> (95)
+        on left: 131
+        on right: 83
+    FLOATVAL_WRAP <node> (96)
+        on left: 132
+        on right: 84
+    plus_WRAP <node> (97)
+        on left: 133
+        on right: 89 99
+    minus_WRAP <node> (98)
+        on left: 134
+        on right: 90 100
+    mul_WRAP <node> (99)
+        on left: 135
+        on right: 95
+    div_WRAP <node> (100)
+        on left: 136
+        on right: 96
+    mod_WRAP <node> (101)
+        on left: 137
+        on right: 97
+    not_WRAP <node> (102)
+        on left: 138
+        on right: 91
+    left_paren_WRAP <node> (103)
+        on left: 139
+        on right: 47 48 64 65 66 80 86 87
+    right_paren_WRAP <node> (104)
+        on left: 140
+        on right: 47 48 64 65 66 80 86 87
+    left_brace_WRAP <node> (105)
+        on left: 141
+        on right: 22 23 24 25 41 42 43 44 53 54
+    right_brace_WRAP <node> (106)
+        on left: 142
+        on right: 22 24 41 43 53 54
+    left_bracket_WRAP <node> (107)
+        on left: 143
+        on right: 17 18 19 20 36 37 38 39 78 79
+    right_bracket_WRAP <node> (108)
+        on left: 144
+        on right: 17 18 19 20 36 37 38 39 78 79
+    comma_WRAP <node> (109)
+        on left: 145
+        on right: 11 27 31 46 50 93
+    less_WRAP <node> (110)
+        on left: 146
+        on right: 102
+    greater_WRAP <node> (111)
+        on left: 147
+        on right: 103
+    assign_WRAP <node> (112)
+        on left: 148
+        on right: 15 16 33 35 59 60
+
+
+State 0
+
+    0 $accept: . CompUnit $end
+
+    error  shift, and go to state 1
+    INT    shift, and go to state 2
+    FLOAT  shift, and go to state 3
+    VOID   shift, and go to state 4
+    CONST  shift, and go to state 5
+
+    CompUnit    go to state 6
+    Decl        go to state 7
+    ConstDecl   go to state 8
+    BType       go to state 9
+    VarDecl     go to state 10
+    FuncDef     go to state 11
+    INT_WRAP    go to state 12
+    FLOAT_WRAP  go to state 13
+    VOID_WRAP   go to state 14
+    CONST_WRAP  go to state 15
+
+
+State 1
+
+    5 CompUnit: error .
+
+    $default  reduce using rule 5 (CompUnit)
+
+
+State 2
+
+  114 INT_WRAP: INT .
+
+    $default  reduce using rule 114 (INT_WRAP)
+
+
+State 3
+
+  115 FLOAT_WRAP: FLOAT .
+
+    $default  reduce using rule 115 (FLOAT_WRAP)
+
+
+State 4
+
+  116 VOID_WRAP: VOID .
+
+    $default  reduce using rule 116 (VOID_WRAP)
+
+
+State 5
+
+  118 CONST_WRAP: CONST .
+
+    $default  reduce using rule 118 (CONST_WRAP)
+
+
+State 6
+
+    0 $accept: CompUnit . $end
+    3 CompUnit: CompUnit . Decl
+    4         | CompUnit . FuncDef
+
+    $end   shift, and go to state 16
+    INT    shift, and go to state 2
+    FLOAT  shift, and go to state 3
+    VOID   shift, and go to state 4
+    CONST  shift, and go to state 5
+
+    Decl        go to state 17
+    ConstDecl   go to state 8
+    BType       go to state 9
+    VarDecl     go to state 10
+    FuncDef     go to state 18
+    INT_WRAP    go to state 12
+    FLOAT_WRAP  go to state 13
+    VOID_WRAP   go to state 14
+    CONST_WRAP  go to state 15
+
+
+State 7
+
+    2 CompUnit: Decl .
+
+    $default  reduce using rule 2 (CompUnit)
+
+
+State 8
+
+    6 Decl: ConstDecl .
+
+    $default  reduce using rule 6 (Decl)
+
+
+State 9
+
+   28 VarDecl: BType . VarDefList ';'
+   29        | BType . VarDefList error
+   47 FuncDef: BType . IDENTIFIER_WRAP left_paren_WRAP right_paren_WRAP Block
+   48        | BType . IDENTIFIER_WRAP left_paren_WRAP FuncFParams right_paren_WRAP Block
+
+    IDENTIFIER  shift, and go to state 19
+
+    VarDefList       go to state 20
+    VarDef           go to state 21
+    IDENTIFIER_WRAP  go to state 22
+
+
+State 10
+
+    7 Decl: VarDecl .
+
+    $default  reduce using rule 7 (Decl)
+
+
+State 11
+
+    1 CompUnit: FuncDef .
+
+    $default  reduce using rule 1 (CompUnit)
+
+
+State 12
+
+   12 BType: INT_WRAP .
+
+    $default  reduce using rule 12 (BType)
+
+
+State 13
+
+   13 BType: FLOAT_WRAP .
+
+    $default  reduce using rule 13 (BType)
+
+
+State 14
+
+   14 BType: VOID_WRAP .
+
+    $default  reduce using rule 14 (BType)
+
+
+State 15
+
+    8 ConstDecl: CONST_WRAP . BType ConstDefList ';'
+    9          | CONST_WRAP . BType ConstDefList error
+
+    INT    shift, and go to state 2
+    FLOAT  shift, and go to state 3
+    VOID   shift, and go to state 4
+
+    BType       go to state 23
+    INT_WRAP    go to state 12
+    FLOAT_WRAP  go to state 13
+    VOID_WRAP   go to state 14
+
+
+State 16
+
+    0 $accept: CompUnit $end .
+
+    $default  accept
+
+
+State 17
+
+    3 CompUnit: CompUnit Decl .
+
+    $default  reduce using rule 3 (CompUnit)
+
+
+State 18
+
+    4 CompUnit: CompUnit FuncDef .
+
+    $default  reduce using rule 4 (CompUnit)
+
+
+State 19
+
+  117 IDENTIFIER_WRAP: IDENTIFIER .
+
+    $default  reduce using rule 117 (IDENTIFIER_WRAP)
+
+
+State 20
+
+   28 VarDecl: BType VarDefList . ';'
+   29        | BType VarDefList . error
+   31 VarDefList: VarDefList . comma_WRAP VarDef
+
+    error  shift, and go to state 24
+    ';'    shift, and go to state 25
+    ','    shift, and go to state 26
+
+    comma_WRAP  go to state 27
+
+
+State 21
+
+   30 VarDefList: VarDef .
+
+    $default  reduce using rule 30 (VarDefList)
+
+
+State 22
+
+   32 VarDef: IDENTIFIER_WRAP .
+   33       | IDENTIFIER_WRAP . assign_WRAP InitVal
+   34       | IDENTIFIER_WRAP . ConstArrayDef
+   35       | IDENTIFIER_WRAP . ConstArrayDef assign_WRAP InitVal
+   47 FuncDef: BType IDENTIFIER_WRAP . left_paren_WRAP right_paren_WRAP Block
+   48        | BType IDENTIFIER_WRAP . left_paren_WRAP FuncFParams right_paren_WRAP Block
+
+    '('  shift, and go to state 28
+    '['  shift, and go to state 29
+    '='  shift, and go to state 30
+
+    $default  reduce using rule 32 (VarDef)
+
+    ConstArrayDef      go to state 31
+    left_paren_WRAP    go to state 32
+    left_bracket_WRAP  go to state 33
+    assign_WRAP        go to state 34
+
+
+State 23
+
+    8 ConstDecl: CONST_WRAP BType . ConstDefList ';'
+    9          | CONST_WRAP BType . ConstDefList error
+
+    IDENTIFIER  shift, and go to state 19
+
+    ConstDefList     go to state 35
+    ConstDef         go to state 36
+    IDENTIFIER_WRAP  go to state 37
+
+
+State 24
+
+   29 VarDecl: BType VarDefList error .
+
+    $default  reduce using rule 29 (VarDecl)
+
+
+State 25
+
+   28 VarDecl: BType VarDefList ';' .
+
+    $default  reduce using rule 28 (VarDecl)
+
+
+State 26
+
+  145 comma_WRAP: ',' .
+
+    $default  reduce using rule 145 (comma_WRAP)
+
+
+State 27
+
+   31 VarDefList: VarDefList comma_WRAP . VarDef
+
+    IDENTIFIER  shift, and go to state 19
+
+    VarDef           go to state 38
+    IDENTIFIER_WRAP  go to state 39
+
+
+State 28
+
+  139 left_paren_WRAP: '(' .
+
+    $default  reduce using rule 139 (left_paren_WRAP)
+
+
+State 29
+
+  143 left_bracket_WRAP: '[' .
+
+    $default  reduce using rule 143 (left_bracket_WRAP)
+
+
+State 30
+
+  148 assign_WRAP: '=' .
+
+    $default  reduce using rule 148 (assign_WRAP)
+
+
+State 31
+
+   19 ConstArrayDef: ConstArrayDef . left_bracket_WRAP ConstExp right_bracket_WRAP
+   20              | ConstArrayDef . left_bracket_WRAP ConstExp error right_bracket_WRAP
+   34 VarDef: IDENTIFIER_WRAP ConstArrayDef .
+   35       | IDENTIFIER_WRAP ConstArrayDef . assign_WRAP InitVal
+
+    '['  shift, and go to state 29
+    '='  shift, and go to state 30
+
+    $default  reduce using rule 34 (VarDef)
+
+    left_bracket_WRAP  go to state 40
+    assign_WRAP        go to state 41
+
+
+State 32
+
+   47 FuncDef: BType IDENTIFIER_WRAP left_paren_WRAP . right_paren_WRAP Block
+   48        | BType IDENTIFIER_WRAP left_paren_WRAP . FuncFParams right_paren_WRAP Block
+
+    INT    shift, and go to state 2
+    FLOAT  shift, and go to state 3
+    VOID   shift, and go to state 4
+    ')'    shift, and go to state 42
+
+    BType             go to state 43
+    FuncFParams       go to state 44
+    FuncFParam        go to state 45
+    INT_WRAP          go to state 12
+    FLOAT_WRAP        go to state 13
+    VOID_WRAP         go to state 14
+    right_paren_WRAP  go to state 46
+
+
+State 33
+
+   17 ConstArrayDef: left_bracket_WRAP . ConstExp right_bracket_WRAP
+   18              | left_bracket_WRAP . ConstExp error right_bracket_WRAP
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 58
+    ConstExp         go to state 59
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 34
+
+   33 VarDef: IDENTIFIER_WRAP assign_WRAP . InitVal
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+
+    InitVal          go to state 68
+    Exp              go to state 69
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+    left_brace_WRAP  go to state 71
+
+
+State 35
+
+    8 ConstDecl: CONST_WRAP BType ConstDefList . ';'
+    9          | CONST_WRAP BType ConstDefList . error
+   11 ConstDefList: ConstDefList . comma_WRAP ConstDef
+
+    error  shift, and go to state 72
+    ';'    shift, and go to state 73
+    ','    shift, and go to state 26
+
+    comma_WRAP  go to state 74
+
+
+State 36
+
+   10 ConstDefList: ConstDef .
+
+    $default  reduce using rule 10 (ConstDefList)
+
+
+State 37
+
+   15 ConstDef: IDENTIFIER_WRAP . ConstArrayDef assign_WRAP ConstInitVal
+   16         | IDENTIFIER_WRAP . assign_WRAP ConstInitVal
+
+    '['  shift, and go to state 29
+    '='  shift, and go to state 30
+
+    ConstArrayDef      go to state 75
+    left_bracket_WRAP  go to state 33
+    assign_WRAP        go to state 76
+
+
+State 38
+
+   31 VarDefList: VarDefList comma_WRAP VarDef .
+
+    $default  reduce using rule 31 (VarDefList)
+
+
+State 39
+
+   32 VarDef: IDENTIFIER_WRAP .
+   33       | IDENTIFIER_WRAP . assign_WRAP InitVal
+   34       | IDENTIFIER_WRAP . ConstArrayDef
+   35       | IDENTIFIER_WRAP . ConstArrayDef assign_WRAP InitVal
+
+    '['  shift, and go to state 29
+    '='  shift, and go to state 30
+
+    $default  reduce using rule 32 (VarDef)
+
+    ConstArrayDef      go to state 31
+    left_bracket_WRAP  go to state 33
+    assign_WRAP        go to state 34
+
+
+State 40
+
+   19 ConstArrayDef: ConstArrayDef left_bracket_WRAP . ConstExp right_bracket_WRAP
+   20              | ConstArrayDef left_bracket_WRAP . ConstExp error right_bracket_WRAP
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 58
+    ConstExp         go to state 77
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 41
+
+   35 VarDef: IDENTIFIER_WRAP ConstArrayDef assign_WRAP . InitVal
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+
+    InitVal          go to state 78
+    Exp              go to state 69
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+    left_brace_WRAP  go to state 71
+
+
+State 42
+
+  140 right_paren_WRAP: ')' .
+
+    $default  reduce using rule 140 (right_paren_WRAP)
+
+
+State 43
+
+   51 FuncFParam: BType . IDENTIFIER_WRAP
+   52           | BType . IDENTIFIER_WRAP ArrayDef
+
+    IDENTIFIER  shift, and go to state 19
+
+    IDENTIFIER_WRAP  go to state 79
+
+
+State 44
+
+   48 FuncDef: BType IDENTIFIER_WRAP left_paren_WRAP FuncFParams . right_paren_WRAP Block
+   50 FuncFParams: FuncFParams . comma_WRAP FuncFParam
+
+    ')'  shift, and go to state 42
+    ','  shift, and go to state 26
+
+    right_paren_WRAP  go to state 80
+    comma_WRAP        go to state 81
+
+
+State 45
+
+   49 FuncFParams: FuncFParam .
+
+    $default  reduce using rule 49 (FuncFParams)
+
+
+State 46
+
+   47 FuncDef: BType IDENTIFIER_WRAP left_paren_WRAP right_paren_WRAP . Block
+
+    '{'  shift, and go to state 67
+
+    Block            go to state 82
+    left_brace_WRAP  go to state 83
+
+
+State 47
+
+  132 FLOATVAL_WRAP: FLOATVAL .
+
+    $default  reduce using rule 132 (FLOATVAL_WRAP)
+
+
+State 48
+
+  131 INTVAL_WRAP: INTVAL .
+
+    $default  reduce using rule 131 (INTVAL_WRAP)
+
+
+State 49
+
+  133 plus_WRAP: '+' .
+
+    $default  reduce using rule 133 (plus_WRAP)
+
+
+State 50
+
+  134 minus_WRAP: '-' .
+
+    $default  reduce using rule 134 (minus_WRAP)
+
+
+State 51
+
+  138 not_WRAP: '!' .
+
+    $default  reduce using rule 138 (not_WRAP)
+
+
+State 52
+
+   78 LVal: LVal . left_bracket_WRAP Exp right_bracket_WRAP
+   79     | LVal . left_bracket_WRAP Exp error right_bracket_WRAP
+   81 PrimaryExp: LVal .
+
+    '['  shift, and go to state 29
+
+    $default  reduce using rule 81 (PrimaryExp)
+
+    left_bracket_WRAP  go to state 84
+
+
+State 53
+
+   85 UnaryExp: PrimaryExp .
+
+    $default  reduce using rule 85 (UnaryExp)
+
+
+State 54
+
+   82 PrimaryExp: Number .
+
+    $default  reduce using rule 82 (PrimaryExp)
+
+
+State 55
+
+   94 MulExp: UnaryExp .
+
+    $default  reduce using rule 94 (MulExp)
+
+
+State 56
+
+   88 UnaryExp: UnaryOp . UnaryExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 85
+    UnaryOp          go to state 56
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 57
+
+   95 MulExp: MulExp . mul_WRAP UnaryExp
+   96       | MulExp . div_WRAP UnaryExp
+   97       | MulExp . mod_WRAP UnaryExp
+   98 AddExp: MulExp .
+
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
+
+    $default  reduce using rule 98 (AddExp)
+
+    mul_WRAP  go to state 89
+    div_WRAP  go to state 90
+    mod_WRAP  go to state 91
+
+
+State 58
+
+   99 AddExp: AddExp . plus_WRAP MulExp
+  100       | AddExp . minus_WRAP MulExp
+  113 ConstExp: AddExp .
+
+    '+'  shift, and go to state 49
+    '-'  shift, and go to state 50
+
+    $default  reduce using rule 113 (ConstExp)
+
+    plus_WRAP   go to state 92
+    minus_WRAP  go to state 93
+
+
+State 59
+
+   17 ConstArrayDef: left_bracket_WRAP ConstExp . right_bracket_WRAP
+   18              | left_bracket_WRAP ConstExp . error right_bracket_WRAP
+
+    error  shift, and go to state 94
+    ']'    shift, and go to state 95
+
+    right_bracket_WRAP  go to state 96
+
+
+State 60
+
+   77 LVal: IDENTIFIER_WRAP .
+   86 UnaryExp: IDENTIFIER_WRAP . left_paren_WRAP right_paren_WRAP
+   87         | IDENTIFIER_WRAP . left_paren_WRAP FuncRParams right_paren_WRAP
+
+    '('  shift, and go to state 28
+
+    $default  reduce using rule 77 (LVal)
+
+    left_paren_WRAP  go to state 97
+
+
+State 61
+
+   83 Number: INTVAL_WRAP .
+
+    $default  reduce using rule 83 (Number)
+
+
+State 62
+
+   84 Number: FLOATVAL_WRAP .
+
+    $default  reduce using rule 84 (Number)
+
+
+State 63
+
+   89 UnaryOp: plus_WRAP .
+
+    $default  reduce using rule 89 (UnaryOp)
+
+
+State 64
+
+   90 UnaryOp: minus_WRAP .
+
+    $default  reduce using rule 90 (UnaryOp)
+
+
+State 65
+
+   91 UnaryOp: not_WRAP .
+
+    $default  reduce using rule 91 (UnaryOp)
+
+
+State 66
+
+   80 PrimaryExp: left_paren_WRAP . Exp right_paren_WRAP
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    Exp              go to state 98
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 67
+
+  141 left_brace_WRAP: '{' .
+
+    $default  reduce using rule 141 (left_brace_WRAP)
+
+
+State 68
+
+   33 VarDef: IDENTIFIER_WRAP assign_WRAP InitVal .
+
+    $default  reduce using rule 33 (VarDef)
+
+
+State 69
+
+   40 InitVal: Exp .
+
+    $default  reduce using rule 40 (InitVal)
+
+
+State 70
+
+   75 Exp: AddExp .
+   99 AddExp: AddExp . plus_WRAP MulExp
+  100       | AddExp . minus_WRAP MulExp
+
+    '+'  shift, and go to state 49
+    '-'  shift, and go to state 50
+
+    $default  reduce using rule 75 (Exp)
+
+    plus_WRAP   go to state 92
+    minus_WRAP  go to state 93
+
+
+State 71
+
+   41 InitVal: left_brace_WRAP . right_brace_WRAP
+   42        | left_brace_WRAP . error
+   43        | left_brace_WRAP . InitValList right_brace_WRAP
+   44        | left_brace_WRAP . InitValList error
+
+    error       shift, and go to state 99
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+    '}'         shift, and go to state 100
+
+    InitVal           go to state 101
+    InitValList       go to state 102
+    Exp               go to state 69
+    LVal              go to state 52
+    PrimaryExp        go to state 53
+    Number            go to state 54
+    UnaryExp          go to state 55
+    UnaryOp           go to state 56
+    MulExp            go to state 57
+    AddExp            go to state 70
+    IDENTIFIER_WRAP   go to state 60
+    INTVAL_WRAP       go to state 61
+    FLOATVAL_WRAP     go to state 62
+    plus_WRAP         go to state 63
+    minus_WRAP        go to state 64
+    not_WRAP          go to state 65
+    left_paren_WRAP   go to state 66
+    left_brace_WRAP   go to state 71
+    right_brace_WRAP  go to state 103
+
+
+State 72
+
+    9 ConstDecl: CONST_WRAP BType ConstDefList error .
+
+    $default  reduce using rule 9 (ConstDecl)
+
+
+State 73
+
+    8 ConstDecl: CONST_WRAP BType ConstDefList ';' .
+
+    $default  reduce using rule 8 (ConstDecl)
+
+
+State 74
+
+   11 ConstDefList: ConstDefList comma_WRAP . ConstDef
+
+    IDENTIFIER  shift, and go to state 19
+
+    ConstDef         go to state 104
+    IDENTIFIER_WRAP  go to state 37
+
+
+State 75
+
+   15 ConstDef: IDENTIFIER_WRAP ConstArrayDef . assign_WRAP ConstInitVal
+   19 ConstArrayDef: ConstArrayDef . left_bracket_WRAP ConstExp right_bracket_WRAP
+   20              | ConstArrayDef . left_bracket_WRAP ConstExp error right_bracket_WRAP
+
+    '['  shift, and go to state 29
+    '='  shift, and go to state 30
+
+    left_bracket_WRAP  go to state 40
+    assign_WRAP        go to state 105
+
+
+State 76
+
+   16 ConstDef: IDENTIFIER_WRAP assign_WRAP . ConstInitVal
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+
+    ConstInitVal     go to state 106
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 58
+    ConstExp         go to state 107
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+    left_brace_WRAP  go to state 108
+
+
+State 77
+
+   19 ConstArrayDef: ConstArrayDef left_bracket_WRAP ConstExp . right_bracket_WRAP
+   20              | ConstArrayDef left_bracket_WRAP ConstExp . error right_bracket_WRAP
+
+    error  shift, and go to state 109
+    ']'    shift, and go to state 95
+
+    right_bracket_WRAP  go to state 110
+
+
+State 78
+
+   35 VarDef: IDENTIFIER_WRAP ConstArrayDef assign_WRAP InitVal .
+
+    $default  reduce using rule 35 (VarDef)
+
+
+State 79
+
+   51 FuncFParam: BType IDENTIFIER_WRAP .
+   52           | BType IDENTIFIER_WRAP . ArrayDef
+
+    '['  shift, and go to state 29
+
+    $default  reduce using rule 51 (FuncFParam)
+
+    ArrayDef           go to state 111
+    left_bracket_WRAP  go to state 112
+
+
+State 80
+
+   48 FuncDef: BType IDENTIFIER_WRAP left_paren_WRAP FuncFParams right_paren_WRAP . Block
+
+    '{'  shift, and go to state 67
+
+    Block            go to state 113
+    left_brace_WRAP  go to state 83
+
+
+State 81
+
+   50 FuncFParams: FuncFParams comma_WRAP . FuncFParam
+
+    INT    shift, and go to state 2
+    FLOAT  shift, and go to state 3
+    VOID   shift, and go to state 4
+
+    BType       go to state 43
+    FuncFParam  go to state 114
+    INT_WRAP    go to state 12
+    FLOAT_WRAP  go to state 13
+    VOID_WRAP   go to state 14
+
+
+State 82
+
+   47 FuncDef: BType IDENTIFIER_WRAP left_paren_WRAP right_paren_WRAP Block .
+
+    $default  reduce using rule 47 (FuncDef)
+
+
+State 83
+
+   53 Block: left_brace_WRAP . right_brace_WRAP
+   54      | left_brace_WRAP . BlockItemList right_brace_WRAP
+
+    INT         shift, and go to state 2
+    FLOAT       shift, and go to state 3
+    VOID        shift, and go to state 4
+    IF          shift, and go to state 115
+    WHILE       shift, and go to state 116
+    RETURN      shift, and go to state 117
+    BREAK       shift, and go to state 118
+    CONTINUE    shift, and go to state 119
+    CONST       shift, and go to state 5
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+    '}'         shift, and go to state 100
+
+    Decl              go to state 120
+    ConstDecl         go to state 8
+    BType             go to state 121
+    VarDecl           go to state 10
+    Block             go to state 122
+    BlockItemList     go to state 123
+    BlockItem         go to state 124
+    Stmt              go to state 125
+    Exp               go to state 126
+    LVal              go to state 127
+    PrimaryExp        go to state 53
+    Number            go to state 54
+    UnaryExp          go to state 55
+    UnaryOp           go to state 56
+    MulExp            go to state 57
+    AddExp            go to state 70
+    INT_WRAP          go to state 12
+    FLOAT_WRAP        go to state 13
+    VOID_WRAP         go to state 14
+    IDENTIFIER_WRAP   go to state 60
+    CONST_WRAP        go to state 15
+    IF_WRAP           go to state 128
+    WHILE_WRAP        go to state 129
+    RETURN_WRAP       go to state 130
+    BREAK_WRAP        go to state 131
+    CONTINUE_WRAP     go to state 132
+    INTVAL_WRAP       go to state 61
+    FLOATVAL_WRAP     go to state 62
+    plus_WRAP         go to state 63
+    minus_WRAP        go to state 64
+    not_WRAP          go to state 65
+    left_paren_WRAP   go to state 66
+    left_brace_WRAP   go to state 83
+    right_brace_WRAP  go to state 133
+
+
+State 84
+
+   78 LVal: LVal left_bracket_WRAP . Exp right_bracket_WRAP
+   79     | LVal left_bracket_WRAP . Exp error right_bracket_WRAP
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    Exp              go to state 134
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 85
+
+   88 UnaryExp: UnaryOp UnaryExp .
+
+    $default  reduce using rule 88 (UnaryExp)
+
+
+State 86
+
+  135 mul_WRAP: '*' .
+
+    $default  reduce using rule 135 (mul_WRAP)
+
+
+State 87
+
+  136 div_WRAP: '/' .
+
+    $default  reduce using rule 136 (div_WRAP)
+
+
+State 88
+
+  137 mod_WRAP: '%' .
+
+    $default  reduce using rule 137 (mod_WRAP)
+
+
+State 89
+
+   95 MulExp: MulExp mul_WRAP . UnaryExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 135
+    UnaryOp          go to state 56
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 90
+
+   96 MulExp: MulExp div_WRAP . UnaryExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 136
+    UnaryOp          go to state 56
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 91
+
+   97 MulExp: MulExp mod_WRAP . UnaryExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 137
+    UnaryOp          go to state 56
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 92
+
+   99 AddExp: AddExp plus_WRAP . MulExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 138
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 93
+
+  100 AddExp: AddExp minus_WRAP . MulExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 139
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 94
+
+   18 ConstArrayDef: left_bracket_WRAP ConstExp error . right_bracket_WRAP
+
+    ']'  shift, and go to state 95
+
+    right_bracket_WRAP  go to state 140
+
+
+State 95
+
+  144 right_bracket_WRAP: ']' .
+
+    $default  reduce using rule 144 (right_bracket_WRAP)
+
+
+State 96
+
+   17 ConstArrayDef: left_bracket_WRAP ConstExp right_bracket_WRAP .
+
+    $default  reduce using rule 17 (ConstArrayDef)
+
+
+State 97
+
+   86 UnaryExp: IDENTIFIER_WRAP left_paren_WRAP . right_paren_WRAP
+   87         | IDENTIFIER_WRAP left_paren_WRAP . FuncRParams right_paren_WRAP
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    ')'         shift, and go to state 42
+
+    Exp               go to state 141
+    LVal              go to state 52
+    PrimaryExp        go to state 53
+    Number            go to state 54
+    UnaryExp          go to state 55
+    UnaryOp           go to state 56
+    FuncRParams       go to state 142
+    MulExp            go to state 57
+    AddExp            go to state 70
+    IDENTIFIER_WRAP   go to state 60
+    INTVAL_WRAP       go to state 61
+    FLOATVAL_WRAP     go to state 62
+    plus_WRAP         go to state 63
+    minus_WRAP        go to state 64
+    not_WRAP          go to state 65
+    left_paren_WRAP   go to state 66
+    right_paren_WRAP  go to state 143
+
+
+State 98
+
+   80 PrimaryExp: left_paren_WRAP Exp . right_paren_WRAP
+
+    ')'  shift, and go to state 42
+
+    right_paren_WRAP  go to state 144
+
+
+State 99
+
+   42 InitVal: left_brace_WRAP error .
+
+    $default  reduce using rule 42 (InitVal)
+
+
+State 100
+
+  142 right_brace_WRAP: '}' .
+
+    $default  reduce using rule 142 (right_brace_WRAP)
+
+
+State 101
+
+   45 InitValList: InitVal .
+
+    $default  reduce using rule 45 (InitValList)
+
+
+State 102
+
+   43 InitVal: left_brace_WRAP InitValList . right_brace_WRAP
+   44        | left_brace_WRAP InitValList . error
+   46 InitValList: InitValList . comma_WRAP InitVal
+
+    error  shift, and go to state 145
+    '}'    shift, and go to state 100
+    ','    shift, and go to state 26
+
+    right_brace_WRAP  go to state 146
+    comma_WRAP        go to state 147
+
+
+State 103
+
+   41 InitVal: left_brace_WRAP right_brace_WRAP .
+
+    $default  reduce using rule 41 (InitVal)
+
+
+State 104
+
+   11 ConstDefList: ConstDefList comma_WRAP ConstDef .
+
+    $default  reduce using rule 11 (ConstDefList)
+
+
+State 105
+
+   15 ConstDef: IDENTIFIER_WRAP ConstArrayDef assign_WRAP . ConstInitVal
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+
+    ConstInitVal     go to state 148
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 58
+    ConstExp         go to state 107
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+    left_brace_WRAP  go to state 108
+
+
+State 106
+
+   16 ConstDef: IDENTIFIER_WRAP assign_WRAP ConstInitVal .
+
+    $default  reduce using rule 16 (ConstDef)
+
+
+State 107
+
+   21 ConstInitVal: ConstExp .
+
+    $default  reduce using rule 21 (ConstInitVal)
+
+
+State 108
+
+   22 ConstInitVal: left_brace_WRAP . right_brace_WRAP
+   23             | left_brace_WRAP . error
+   24             | left_brace_WRAP . ConstInitValList right_brace_WRAP
+   25             | left_brace_WRAP . ConstInitValList error
+
+    error       shift, and go to state 149
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+    '}'         shift, and go to state 100
+
+    ConstInitVal      go to state 150
+    ConstInitValList  go to state 151
+    LVal              go to state 52
+    PrimaryExp        go to state 53
+    Number            go to state 54
+    UnaryExp          go to state 55
+    UnaryOp           go to state 56
+    MulExp            go to state 57
+    AddExp            go to state 58
+    ConstExp          go to state 107
+    IDENTIFIER_WRAP   go to state 60
+    INTVAL_WRAP       go to state 61
+    FLOATVAL_WRAP     go to state 62
+    plus_WRAP         go to state 63
+    minus_WRAP        go to state 64
+    not_WRAP          go to state 65
+    left_paren_WRAP   go to state 66
+    left_brace_WRAP   go to state 108
+    right_brace_WRAP  go to state 152
+
+
+State 109
+
+   20 ConstArrayDef: ConstArrayDef left_bracket_WRAP ConstExp error . right_bracket_WRAP
+
+    ']'  shift, and go to state 95
+
+    right_bracket_WRAP  go to state 153
+
+
+State 110
+
+   19 ConstArrayDef: ConstArrayDef left_bracket_WRAP ConstExp right_bracket_WRAP .
+
+    $default  reduce using rule 19 (ConstArrayDef)
+
+
+State 111
+
+   38 ArrayDef: ArrayDef . left_bracket_WRAP Exp right_bracket_WRAP
+   39         | ArrayDef . left_bracket_WRAP Exp error right_bracket_WRAP
+   52 FuncFParam: BType IDENTIFIER_WRAP ArrayDef .
+
+    '['  shift, and go to state 29
+
+    $default  reduce using rule 52 (FuncFParam)
+
+    left_bracket_WRAP  go to state 154
+
+
+State 112
+
+   36 ArrayDef: left_bracket_WRAP . Exp right_bracket_WRAP
+   37         | left_bracket_WRAP . Exp error right_bracket_WRAP
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    Exp              go to state 155
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 113
+
+   48 FuncDef: BType IDENTIFIER_WRAP left_paren_WRAP FuncFParams right_paren_WRAP Block .
+
+    $default  reduce using rule 48 (FuncDef)
+
+
+State 114
+
+   50 FuncFParams: FuncFParams comma_WRAP FuncFParam .
+
+    $default  reduce using rule 50 (FuncFParams)
+
+
+State 115
+
+  125 IF_WRAP: IF .
+
+    $default  reduce using rule 125 (IF_WRAP)
+
+
+State 116
+
+  127 WHILE_WRAP: WHILE .
+
+    $default  reduce using rule 127 (WHILE_WRAP)
+
+
+State 117
+
+  128 RETURN_WRAP: RETURN .
+
+    $default  reduce using rule 128 (RETURN_WRAP)
+
+
+State 118
+
+  129 BREAK_WRAP: BREAK .
+
+    $default  reduce using rule 129 (BREAK_WRAP)
+
+
+State 119
+
+  130 CONTINUE_WRAP: CONTINUE .
+
+    $default  reduce using rule 130 (CONTINUE_WRAP)
+
+
+State 120
+
+   57 BlockItem: Decl .
+
+    $default  reduce using rule 57 (BlockItem)
+
+
+State 121
+
+   28 VarDecl: BType . VarDefList ';'
+   29        | BType . VarDefList error
+
+    IDENTIFIER  shift, and go to state 19
+
+    VarDefList       go to state 20
+    VarDef           go to state 21
+    IDENTIFIER_WRAP  go to state 39
+
+
+State 122
+
+   63 Stmt: Block .
+
+    $default  reduce using rule 63 (Stmt)
+
+
+State 123
+
+   54 Block: left_brace_WRAP BlockItemList . right_brace_WRAP
+   56 BlockItemList: BlockItemList . BlockItem
+
+    INT         shift, and go to state 2
+    FLOAT       shift, and go to state 3
+    VOID        shift, and go to state 4
+    IF          shift, and go to state 115
+    WHILE       shift, and go to state 116
+    RETURN      shift, and go to state 117
+    BREAK       shift, and go to state 118
+    CONTINUE    shift, and go to state 119
+    CONST       shift, and go to state 5
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+    '}'         shift, and go to state 100
+
+    Decl              go to state 120
+    ConstDecl         go to state 8
+    BType             go to state 121
+    VarDecl           go to state 10
+    Block             go to state 122
+    BlockItem         go to state 156
+    Stmt              go to state 125
+    Exp               go to state 126
+    LVal              go to state 127
+    PrimaryExp        go to state 53
+    Number            go to state 54
+    UnaryExp          go to state 55
+    UnaryOp           go to state 56
+    MulExp            go to state 57
+    AddExp            go to state 70
+    INT_WRAP          go to state 12
+    FLOAT_WRAP        go to state 13
+    VOID_WRAP         go to state 14
+    IDENTIFIER_WRAP   go to state 60
+    CONST_WRAP        go to state 15
+    IF_WRAP           go to state 128
+    WHILE_WRAP        go to state 129
+    RETURN_WRAP       go to state 130
+    BREAK_WRAP        go to state 131
+    CONTINUE_WRAP     go to state 132
+    INTVAL_WRAP       go to state 61
+    FLOATVAL_WRAP     go to state 62
+    plus_WRAP         go to state 63
+    minus_WRAP        go to state 64
+    not_WRAP          go to state 65
+    left_paren_WRAP   go to state 66
+    left_brace_WRAP   go to state 83
+    right_brace_WRAP  go to state 157
+
+
+State 124
+
+   55 BlockItemList: BlockItem .
+
+    $default  reduce using rule 55 (BlockItemList)
+
+
+State 125
+
+   58 BlockItem: Stmt .
+
+    $default  reduce using rule 58 (BlockItem)
+
+
+State 126
+
+   61 Stmt: Exp . ';'
+   62     | Exp . error
+
+    error  shift, and go to state 158
+    ';'    shift, and go to state 159
+
+
+State 127
+
+   59 Stmt: LVal . assign_WRAP Exp ';'
+   60     | LVal . assign_WRAP Exp error
+   78 LVal: LVal . left_bracket_WRAP Exp right_bracket_WRAP
+   79     | LVal . left_bracket_WRAP Exp error right_bracket_WRAP
+   81 PrimaryExp: LVal .
+
+    '['  shift, and go to state 29
+    '='  shift, and go to state 30
+
+    $default  reduce using rule 81 (PrimaryExp)
+
+    left_bracket_WRAP  go to state 84
+    assign_WRAP        go to state 160
+
+
+State 128
+
+   64 Stmt: IF_WRAP . left_paren_WRAP Cond right_paren_WRAP Stmt
+   65     | IF_WRAP . left_paren_WRAP Cond right_paren_WRAP Stmt ELSE_WRAP Stmt
+
+    '('  shift, and go to state 28
+
+    left_paren_WRAP  go to state 161
+
+
+State 129
+
+   66 Stmt: WHILE_WRAP . left_paren_WRAP Cond right_paren_WRAP Stmt
+
+    '('  shift, and go to state 28
+
+    left_paren_WRAP  go to state 162
+
+
+State 130
+
+   71 Stmt: RETURN_WRAP . ';'
+   72     | RETURN_WRAP . error
+   73     | RETURN_WRAP . Exp ';'
+   74     | RETURN_WRAP . Exp error
+
+    error       shift, and go to state 163
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    ';'         shift, and go to state 164
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    Exp              go to state 165
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 131
+
+   67 Stmt: BREAK_WRAP . ';'
+   68     | BREAK_WRAP . error
+
+    error  shift, and go to state 166
+    ';'    shift, and go to state 167
+
+
+State 132
+
+   69 Stmt: CONTINUE_WRAP . ';'
+   70     | CONTINUE_WRAP . error
+
+    error  shift, and go to state 168
+    ';'    shift, and go to state 169
+
+
+State 133
+
+   53 Block: left_brace_WRAP right_brace_WRAP .
+
+    $default  reduce using rule 53 (Block)
+
+
+State 134
+
+   78 LVal: LVal left_bracket_WRAP Exp . right_bracket_WRAP
+   79     | LVal left_bracket_WRAP Exp . error right_bracket_WRAP
+
+    error  shift, and go to state 170
+    ']'    shift, and go to state 95
+
+    right_bracket_WRAP  go to state 171
+
+
+State 135
+
+   95 MulExp: MulExp mul_WRAP UnaryExp .
+
+    $default  reduce using rule 95 (MulExp)
+
+
+State 136
+
+   96 MulExp: MulExp div_WRAP UnaryExp .
+
+    $default  reduce using rule 96 (MulExp)
+
+
+State 137
+
+   97 MulExp: MulExp mod_WRAP UnaryExp .
+
+    $default  reduce using rule 97 (MulExp)
+
+
+State 138
+
+   95 MulExp: MulExp . mul_WRAP UnaryExp
+   96       | MulExp . div_WRAP UnaryExp
+   97       | MulExp . mod_WRAP UnaryExp
+   99 AddExp: AddExp plus_WRAP MulExp .
+
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
+
+    $default  reduce using rule 99 (AddExp)
+
+    mul_WRAP  go to state 89
+    div_WRAP  go to state 90
+    mod_WRAP  go to state 91
+
+
+State 139
+
+   95 MulExp: MulExp . mul_WRAP UnaryExp
+   96       | MulExp . div_WRAP UnaryExp
+   97       | MulExp . mod_WRAP UnaryExp
+  100 AddExp: AddExp minus_WRAP MulExp .
+
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
+
+    $default  reduce using rule 100 (AddExp)
+
+    mul_WRAP  go to state 89
+    div_WRAP  go to state 90
+    mod_WRAP  go to state 91
+
+
+State 140
+
+   18 ConstArrayDef: left_bracket_WRAP ConstExp error right_bracket_WRAP .
+
+    $default  reduce using rule 18 (ConstArrayDef)
+
+
+State 141
+
+   92 FuncRParams: Exp .
+
+    $default  reduce using rule 92 (FuncRParams)
+
+
+State 142
+
+   87 UnaryExp: IDENTIFIER_WRAP left_paren_WRAP FuncRParams . right_paren_WRAP
+   93 FuncRParams: FuncRParams . comma_WRAP Exp
+
+    ')'  shift, and go to state 42
+    ','  shift, and go to state 26
+
+    right_paren_WRAP  go to state 172
+    comma_WRAP        go to state 173
+
+
+State 143
+
+   86 UnaryExp: IDENTIFIER_WRAP left_paren_WRAP right_paren_WRAP .
+
+    $default  reduce using rule 86 (UnaryExp)
+
+
+State 144
+
+   80 PrimaryExp: left_paren_WRAP Exp right_paren_WRAP .
+
+    $default  reduce using rule 80 (PrimaryExp)
+
+
+State 145
+
+   44 InitVal: left_brace_WRAP InitValList error .
+
+    $default  reduce using rule 44 (InitVal)
+
+
+State 146
+
+   43 InitVal: left_brace_WRAP InitValList right_brace_WRAP .
+
+    $default  reduce using rule 43 (InitVal)
+
+
+State 147
+
+   46 InitValList: InitValList comma_WRAP . InitVal
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+
+    InitVal          go to state 174
+    Exp              go to state 69
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+    left_brace_WRAP  go to state 71
+
+
+State 148
+
+   15 ConstDef: IDENTIFIER_WRAP ConstArrayDef assign_WRAP ConstInitVal .
+
+    $default  reduce using rule 15 (ConstDef)
+
+
+State 149
+
+   23 ConstInitVal: left_brace_WRAP error .
+
+    $default  reduce using rule 23 (ConstInitVal)
+
+
+State 150
+
+   26 ConstInitValList: ConstInitVal .
+
+    $default  reduce using rule 26 (ConstInitValList)
+
+
+State 151
+
+   24 ConstInitVal: left_brace_WRAP ConstInitValList . right_brace_WRAP
+   25             | left_brace_WRAP ConstInitValList . error
+   27 ConstInitValList: ConstInitValList . comma_WRAP ConstInitVal
+
+    error  shift, and go to state 175
+    '}'    shift, and go to state 100
+    ','    shift, and go to state 26
+
+    right_brace_WRAP  go to state 176
+    comma_WRAP        go to state 177
+
+
+State 152
+
+   22 ConstInitVal: left_brace_WRAP right_brace_WRAP .
+
+    $default  reduce using rule 22 (ConstInitVal)
+
+
+State 153
+
+   20 ConstArrayDef: ConstArrayDef left_bracket_WRAP ConstExp error right_bracket_WRAP .
+
+    $default  reduce using rule 20 (ConstArrayDef)
+
+
+State 154
+
+   38 ArrayDef: ArrayDef left_bracket_WRAP . Exp right_bracket_WRAP
+   39         | ArrayDef left_bracket_WRAP . Exp error right_bracket_WRAP
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    Exp              go to state 178
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 155
+
+   36 ArrayDef: left_bracket_WRAP Exp . right_bracket_WRAP
+   37         | left_bracket_WRAP Exp . error right_bracket_WRAP
+
+    error  shift, and go to state 179
+    ']'    shift, and go to state 95
+
+    right_bracket_WRAP  go to state 180
+
+
+State 156
+
+   56 BlockItemList: BlockItemList BlockItem .
+
+    $default  reduce using rule 56 (BlockItemList)
+
+
+State 157
+
+   54 Block: left_brace_WRAP BlockItemList right_brace_WRAP .
+
+    $default  reduce using rule 54 (Block)
+
+
+State 158
+
+   62 Stmt: Exp error .
+
+    $default  reduce using rule 62 (Stmt)
+
+
+State 159
+
+   61 Stmt: Exp ';' .
+
+    $default  reduce using rule 61 (Stmt)
+
+
+State 160
+
+   59 Stmt: LVal assign_WRAP . Exp ';'
+   60     | LVal assign_WRAP . Exp error
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    Exp              go to state 181
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 161
+
+   64 Stmt: IF_WRAP left_paren_WRAP . Cond right_paren_WRAP Stmt
+   65     | IF_WRAP left_paren_WRAP . Cond right_paren_WRAP Stmt ELSE_WRAP Stmt
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    Cond             go to state 182
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 183
+    RelExp           go to state 184
+    EqExp            go to state 185
+    LAndExp          go to state 186
+    LOrExp           go to state 187
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 162
+
+   66 Stmt: WHILE_WRAP left_paren_WRAP . Cond right_paren_WRAP Stmt
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    Cond             go to state 188
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 183
+    RelExp           go to state 184
+    EqExp            go to state 185
+    LAndExp          go to state 186
+    LOrExp           go to state 187
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 163
+
+   72 Stmt: RETURN_WRAP error .
+
+    $default  reduce using rule 72 (Stmt)
+
+
+State 164
+
+   71 Stmt: RETURN_WRAP ';' .
+
+    $default  reduce using rule 71 (Stmt)
+
+
+State 165
+
+   73 Stmt: RETURN_WRAP Exp . ';'
+   74     | RETURN_WRAP Exp . error
+
+    error  shift, and go to state 189
+    ';'    shift, and go to state 190
+
+
+State 166
+
+   68 Stmt: BREAK_WRAP error .
+
+    $default  reduce using rule 68 (Stmt)
+
+
+State 167
+
+   67 Stmt: BREAK_WRAP ';' .
+
+    $default  reduce using rule 67 (Stmt)
+
+
+State 168
+
+   70 Stmt: CONTINUE_WRAP error .
+
+    $default  reduce using rule 70 (Stmt)
+
+
+State 169
+
+   69 Stmt: CONTINUE_WRAP ';' .
+
+    $default  reduce using rule 69 (Stmt)
+
+
+State 170
+
+   79 LVal: LVal left_bracket_WRAP Exp error . right_bracket_WRAP
+
+    ']'  shift, and go to state 95
+
+    right_bracket_WRAP  go to state 191
+
+
+State 171
+
+   78 LVal: LVal left_bracket_WRAP Exp right_bracket_WRAP .
+
+    $default  reduce using rule 78 (LVal)
+
+
+State 172
+
+   87 UnaryExp: IDENTIFIER_WRAP left_paren_WRAP FuncRParams right_paren_WRAP .
+
+    $default  reduce using rule 87 (UnaryExp)
+
+
+State 173
+
+   93 FuncRParams: FuncRParams comma_WRAP . Exp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    Exp              go to state 192
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 174
+
+   46 InitValList: InitValList comma_WRAP InitVal .
+
+    $default  reduce using rule 46 (InitValList)
+
+
+State 175
+
+   25 ConstInitVal: left_brace_WRAP ConstInitValList error .
+
+    $default  reduce using rule 25 (ConstInitVal)
+
+
+State 176
+
+   24 ConstInitVal: left_brace_WRAP ConstInitValList right_brace_WRAP .
+
+    $default  reduce using rule 24 (ConstInitVal)
+
+
+State 177
+
+   27 ConstInitValList: ConstInitValList comma_WRAP . ConstInitVal
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+
+    ConstInitVal     go to state 193
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 58
+    ConstExp         go to state 107
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+    left_brace_WRAP  go to state 108
+
+
+State 178
+
+   38 ArrayDef: ArrayDef left_bracket_WRAP Exp . right_bracket_WRAP
+   39         | ArrayDef left_bracket_WRAP Exp . error right_bracket_WRAP
+
+    error  shift, and go to state 194
+    ']'    shift, and go to state 95
+
+    right_bracket_WRAP  go to state 195
+
+
+State 179
+
+   37 ArrayDef: left_bracket_WRAP Exp error . right_bracket_WRAP
+
+    ']'  shift, and go to state 95
+
+    right_bracket_WRAP  go to state 196
+
+
+State 180
+
+   36 ArrayDef: left_bracket_WRAP Exp right_bracket_WRAP .
+
+    $default  reduce using rule 36 (ArrayDef)
+
+
+State 181
+
+   59 Stmt: LVal assign_WRAP Exp . ';'
+   60     | LVal assign_WRAP Exp . error
+
+    error  shift, and go to state 197
+    ';'    shift, and go to state 198
+
+
+State 182
+
+   64 Stmt: IF_WRAP left_paren_WRAP Cond . right_paren_WRAP Stmt
+   65     | IF_WRAP left_paren_WRAP Cond . right_paren_WRAP Stmt ELSE_WRAP Stmt
+
+    ')'  shift, and go to state 42
+
+    right_paren_WRAP  go to state 199
+
+
+State 183
+
+   99 AddExp: AddExp . plus_WRAP MulExp
+  100       | AddExp . minus_WRAP MulExp
+  101 RelExp: AddExp .
+
+    '+'  shift, and go to state 49
+    '-'  shift, and go to state 50
+
+    $default  reduce using rule 101 (RelExp)
+
+    plus_WRAP   go to state 92
+    minus_WRAP  go to state 93
+
+
+State 184
+
+  102 RelExp: RelExp . less_WRAP AddExp
+  103       | RelExp . greater_WRAP AddExp
+  104       | RelExp . LE_WRAP AddExp
+  105       | RelExp . GE_WRAP AddExp
+  106 EqExp: RelExp .
+
+    LE   shift, and go to state 200
+    GE   shift, and go to state 201
+    '<'  shift, and go to state 202
+    '>'  shift, and go to state 203
+
+    $default  reduce using rule 106 (EqExp)
+
+    LE_WRAP       go to state 204
+    GE_WRAP       go to state 205
+    less_WRAP     go to state 206
+    greater_WRAP  go to state 207
+
+
+State 185
+
+  107 EqExp: EqExp . EQ_WRAP RelExp
+  108      | EqExp . NE_WRAP RelExp
+  109 LAndExp: EqExp .
+
+    EQ  shift, and go to state 208
+    NE  shift, and go to state 209
+
+    $default  reduce using rule 109 (LAndExp)
+
+    EQ_WRAP  go to state 210
+    NE_WRAP  go to state 211
+
+
+State 186
+
+  110 LAndExp: LAndExp . AND_WRAP EqExp
+  111 LOrExp: LAndExp .
+
+    AND  shift, and go to state 212
+
+    $default  reduce using rule 111 (LOrExp)
+
+    AND_WRAP  go to state 213
+
+
+State 187
+
+   76 Cond: LOrExp .
+  112 LOrExp: LOrExp . OR_WRAP LAndExp
+
+    OR  shift, and go to state 214
+
+    $default  reduce using rule 76 (Cond)
+
+    OR_WRAP  go to state 215
+
+
+State 188
+
+   66 Stmt: WHILE_WRAP left_paren_WRAP Cond . right_paren_WRAP Stmt
+
+    ')'  shift, and go to state 42
+
+    right_paren_WRAP  go to state 216
+
+
+State 189
+
+   74 Stmt: RETURN_WRAP Exp error .
+
+    $default  reduce using rule 74 (Stmt)
+
+
+State 190
+
+   73 Stmt: RETURN_WRAP Exp ';' .
+
+    $default  reduce using rule 73 (Stmt)
+
+
+State 191
+
+   79 LVal: LVal left_bracket_WRAP Exp error right_bracket_WRAP .
+
+    $default  reduce using rule 79 (LVal)
+
+
+State 192
+
+   93 FuncRParams: FuncRParams comma_WRAP Exp .
+
+    $default  reduce using rule 93 (FuncRParams)
+
+
+State 193
+
+   27 ConstInitValList: ConstInitValList comma_WRAP ConstInitVal .
+
+    $default  reduce using rule 27 (ConstInitValList)
+
+
+State 194
+
+   39 ArrayDef: ArrayDef left_bracket_WRAP Exp error . right_bracket_WRAP
+
+    ']'  shift, and go to state 95
+
+    right_bracket_WRAP  go to state 217
+
+
+State 195
+
+   38 ArrayDef: ArrayDef left_bracket_WRAP Exp right_bracket_WRAP .
+
+    $default  reduce using rule 38 (ArrayDef)
+
+
+State 196
+
+   37 ArrayDef: left_bracket_WRAP Exp error right_bracket_WRAP .
+
+    $default  reduce using rule 37 (ArrayDef)
+
+
+State 197
+
+   60 Stmt: LVal assign_WRAP Exp error .
+
+    $default  reduce using rule 60 (Stmt)
+
+
+State 198
+
+   59 Stmt: LVal assign_WRAP Exp ';' .
+
+    $default  reduce using rule 59 (Stmt)
+
+
+State 199
+
+   64 Stmt: IF_WRAP left_paren_WRAP Cond right_paren_WRAP . Stmt
+   65     | IF_WRAP left_paren_WRAP Cond right_paren_WRAP . Stmt ELSE_WRAP Stmt
+
+    IF          shift, and go to state 115
+    WHILE       shift, and go to state 116
+    RETURN      shift, and go to state 117
+    BREAK       shift, and go to state 118
+    CONTINUE    shift, and go to state 119
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+
+    Block            go to state 122
+    Stmt             go to state 218
+    Exp              go to state 126
+    LVal             go to state 127
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    IF_WRAP          go to state 128
+    WHILE_WRAP       go to state 129
+    RETURN_WRAP      go to state 130
+    BREAK_WRAP       go to state 131
+    CONTINUE_WRAP    go to state 132
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+    left_brace_WRAP  go to state 83
+
+
+State 200
+
+  121 LE_WRAP: LE .
+
+    $default  reduce using rule 121 (LE_WRAP)
+
+
+State 201
+
+  122 GE_WRAP: GE .
+
+    $default  reduce using rule 122 (GE_WRAP)
+
+
+State 202
+
+  146 less_WRAP: '<' .
+
+    $default  reduce using rule 146 (less_WRAP)
+
+
+State 203
+
+  147 greater_WRAP: '>' .
+
+    $default  reduce using rule 147 (greater_WRAP)
+
+
+State 204
+
+  104 RelExp: RelExp LE_WRAP . AddExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 219
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 205
+
+  105 RelExp: RelExp GE_WRAP . AddExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 220
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 206
+
+  102 RelExp: RelExp less_WRAP . AddExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 221
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 207
+
+  103 RelExp: RelExp greater_WRAP . AddExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 222
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 208
+
+  119 EQ_WRAP: EQ .
+
+    $default  reduce using rule 119 (EQ_WRAP)
+
+
+State 209
+
+  120 NE_WRAP: NE .
+
+    $default  reduce using rule 120 (NE_WRAP)
+
+
+State 210
+
+  107 EqExp: EqExp EQ_WRAP . RelExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 183
+    RelExp           go to state 223
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 211
+
+  108 EqExp: EqExp NE_WRAP . RelExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 183
+    RelExp           go to state 224
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 212
+
+  123 AND_WRAP: AND .
+
+    $default  reduce using rule 123 (AND_WRAP)
+
+
+State 213
+
+  110 LAndExp: LAndExp AND_WRAP . EqExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 183
+    RelExp           go to state 184
+    EqExp            go to state 225
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 214
+
+  124 OR_WRAP: OR .
+
+    $default  reduce using rule 124 (OR_WRAP)
+
+
+State 215
+
+  112 LOrExp: LOrExp OR_WRAP . LAndExp
+
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+
+    LVal             go to state 52
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 183
+    RelExp           go to state 184
+    EqExp            go to state 185
+    LAndExp          go to state 226
+    IDENTIFIER_WRAP  go to state 60
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+
+
+State 216
+
+   66 Stmt: WHILE_WRAP left_paren_WRAP Cond right_paren_WRAP . Stmt
+
+    IF          shift, and go to state 115
+    WHILE       shift, and go to state 116
+    RETURN      shift, and go to state 117
+    BREAK       shift, and go to state 118
+    CONTINUE    shift, and go to state 119
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+
+    Block            go to state 122
+    Stmt             go to state 227
+    Exp              go to state 126
+    LVal             go to state 127
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    IF_WRAP          go to state 128
+    WHILE_WRAP       go to state 129
+    RETURN_WRAP      go to state 130
+    BREAK_WRAP       go to state 131
+    CONTINUE_WRAP    go to state 132
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+    left_brace_WRAP  go to state 83
+
+
+State 217
+
+   39 ArrayDef: ArrayDef left_bracket_WRAP Exp error right_bracket_WRAP .
+
+    $default  reduce using rule 39 (ArrayDef)
+
+
+State 218
+
+   64 Stmt: IF_WRAP left_paren_WRAP Cond right_paren_WRAP Stmt .
+   65     | IF_WRAP left_paren_WRAP Cond right_paren_WRAP Stmt . ELSE_WRAP Stmt
+
+    ELSE  shift, and go to state 228
+
+    ELSE      [reduce using rule 64 (Stmt)]
+    $default  reduce using rule 64 (Stmt)
+
+    ELSE_WRAP  go to state 229
+
+
+State 219
+
+   99 AddExp: AddExp . plus_WRAP MulExp
+  100       | AddExp . minus_WRAP MulExp
+  104 RelExp: RelExp LE_WRAP AddExp .
+
+    '+'  shift, and go to state 49
+    '-'  shift, and go to state 50
+
+    $default  reduce using rule 104 (RelExp)
+
+    plus_WRAP   go to state 92
+    minus_WRAP  go to state 93
+
+
+State 220
+
+   99 AddExp: AddExp . plus_WRAP MulExp
+  100       | AddExp . minus_WRAP MulExp
+  105 RelExp: RelExp GE_WRAP AddExp .
+
+    '+'  shift, and go to state 49
+    '-'  shift, and go to state 50
+
+    $default  reduce using rule 105 (RelExp)
+
+    plus_WRAP   go to state 92
+    minus_WRAP  go to state 93
+
+
+State 221
+
+   99 AddExp: AddExp . plus_WRAP MulExp
+  100       | AddExp . minus_WRAP MulExp
+  102 RelExp: RelExp less_WRAP AddExp .
+
+    '+'  shift, and go to state 49
+    '-'  shift, and go to state 50
+
+    $default  reduce using rule 102 (RelExp)
+
+    plus_WRAP   go to state 92
+    minus_WRAP  go to state 93
+
+
+State 222
+
+   99 AddExp: AddExp . plus_WRAP MulExp
+  100       | AddExp . minus_WRAP MulExp
+  103 RelExp: RelExp greater_WRAP AddExp .
+
+    '+'  shift, and go to state 49
+    '-'  shift, and go to state 50
+
+    $default  reduce using rule 103 (RelExp)
+
+    plus_WRAP   go to state 92
+    minus_WRAP  go to state 93
+
+
+State 223
+
+  102 RelExp: RelExp . less_WRAP AddExp
+  103       | RelExp . greater_WRAP AddExp
+  104       | RelExp . LE_WRAP AddExp
+  105       | RelExp . GE_WRAP AddExp
+  107 EqExp: EqExp EQ_WRAP RelExp .
+
+    LE   shift, and go to state 200
+    GE   shift, and go to state 201
+    '<'  shift, and go to state 202
+    '>'  shift, and go to state 203
+
+    $default  reduce using rule 107 (EqExp)
+
+    LE_WRAP       go to state 204
+    GE_WRAP       go to state 205
+    less_WRAP     go to state 206
+    greater_WRAP  go to state 207
+
+
+State 224
+
+  102 RelExp: RelExp . less_WRAP AddExp
+  103       | RelExp . greater_WRAP AddExp
+  104       | RelExp . LE_WRAP AddExp
+  105       | RelExp . GE_WRAP AddExp
+  108 EqExp: EqExp NE_WRAP RelExp .
+
+    LE   shift, and go to state 200
+    GE   shift, and go to state 201
+    '<'  shift, and go to state 202
+    '>'  shift, and go to state 203
+
+    $default  reduce using rule 108 (EqExp)
+
+    LE_WRAP       go to state 204
+    GE_WRAP       go to state 205
+    less_WRAP     go to state 206
+    greater_WRAP  go to state 207
+
+
+State 225
+
+  107 EqExp: EqExp . EQ_WRAP RelExp
+  108      | EqExp . NE_WRAP RelExp
+  110 LAndExp: LAndExp AND_WRAP EqExp .
+
+    EQ  shift, and go to state 208
+    NE  shift, and go to state 209
+
+    $default  reduce using rule 110 (LAndExp)
+
+    EQ_WRAP  go to state 210
+    NE_WRAP  go to state 211
+
+
+State 226
+
+  110 LAndExp: LAndExp . AND_WRAP EqExp
+  112 LOrExp: LOrExp OR_WRAP LAndExp .
+
+    AND  shift, and go to state 212
+
+    $default  reduce using rule 112 (LOrExp)
+
+    AND_WRAP  go to state 213
+
+
+State 227
+
+   66 Stmt: WHILE_WRAP left_paren_WRAP Cond right_paren_WRAP Stmt .
+
+    $default  reduce using rule 66 (Stmt)
+
+
+State 228
+
+  126 ELSE_WRAP: ELSE .
+
+    $default  reduce using rule 126 (ELSE_WRAP)
+
+
+State 229
+
+   65 Stmt: IF_WRAP left_paren_WRAP Cond right_paren_WRAP Stmt ELSE_WRAP . Stmt
+
+    IF          shift, and go to state 115
+    WHILE       shift, and go to state 116
+    RETURN      shift, and go to state 117
+    BREAK       shift, and go to state 118
+    CONTINUE    shift, and go to state 119
+    IDENTIFIER  shift, and go to state 19
+    FLOATVAL    shift, and go to state 47
+    INTVAL      shift, and go to state 48
+    '+'         shift, and go to state 49
+    '-'         shift, and go to state 50
+    '!'         shift, and go to state 51
+    '('         shift, and go to state 28
+    '{'         shift, and go to state 67
+
+    Block            go to state 122
+    Stmt             go to state 230
+    Exp              go to state 126
+    LVal             go to state 127
+    PrimaryExp       go to state 53
+    Number           go to state 54
+    UnaryExp         go to state 55
+    UnaryOp          go to state 56
+    MulExp           go to state 57
+    AddExp           go to state 70
+    IDENTIFIER_WRAP  go to state 60
+    IF_WRAP          go to state 128
+    WHILE_WRAP       go to state 129
+    RETURN_WRAP      go to state 130
+    BREAK_WRAP       go to state 131
+    CONTINUE_WRAP    go to state 132
+    INTVAL_WRAP      go to state 61
+    FLOATVAL_WRAP    go to state 62
+    plus_WRAP        go to state 63
+    minus_WRAP       go to state 64
+    not_WRAP         go to state 65
+    left_paren_WRAP  go to state 66
+    left_brace_WRAP  go to state 83
+
+
+State 230
+
+   65 Stmt: IF_WRAP left_paren_WRAP Cond right_paren_WRAP Stmt ELSE_WRAP Stmt .
+
+    $default  reduce using rule 65 (Stmt)

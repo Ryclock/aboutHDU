@@ -1,0 +1,22 @@
+
+sample.o:     file format pe-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <main>:
+   0:	55                   	push   %rbp
+   1:	48 89 e5             	mov    %rsp,%rbp
+   4:	48 83 ec 30          	sub    $0x30,%rsp
+   8:	e8 00 00 00 00       	callq  d <main+0xd>
+   d:	c7 45 fc 04 00 00 00 	movl   $0x4,-0x4(%rbp)
+  14:	83 7d fc 00          	cmpl   $0x0,-0x4(%rbp)
+  18:	74 06                	je     20 <main+0x20>
+  1a:	83 45 fc 04          	addl   $0x4,-0x4(%rbp)
+  1e:	eb 04                	jmp    24 <main+0x24>
+  20:	c1 65 fc 02          	shll   $0x2,-0x4(%rbp)
+  24:	b8 00 00 00 00       	mov    $0x0,%eax
+  29:	48 83 c4 30          	add    $0x30,%rsp
+  2d:	5d                   	pop    %rbp
+  2e:	c3                   	retq   
+  2f:	90                   	nop

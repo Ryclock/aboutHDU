@@ -1,0 +1,3037 @@
+State 200 conflicts: 1 reduce/reduce
+
+
+Grammar
+
+    0 $accept: Start $end
+
+    1 Start: CompUnitList
+
+    2 Node_const: KW_CONST
+
+    3 Node_if: KW_IF
+
+    4 Node_else: KW_ELSE
+
+    5 Node_while: KW_WHILE
+
+    6 Node_jumpout: KW_BREAK
+    7             | KW_CONTINUE
+
+    8 Node_return: KW_RETURN
+
+    9 Node_ID: IDENTIFIER
+
+   10 Node_open_brace: '{'
+
+   11 Node_close_brace: '}'
+
+   12 Node_open_bracket: '['
+
+   13 Node_close_bracket: ']'
+
+   14 Node_open_paren: '('
+
+   15 Node_close_paren: ')'
+
+   16 Node_semicolon: ';'
+
+   17 Node_comma: ','
+
+   18 Node_mul_div_mod: '*'
+   19                 | '/'
+   20                 | '%'
+
+   21 Node_lgeq: '<'
+   22          | '>'
+   23          | LEQ
+   24          | GEQ
+
+   25 Node_eqn: EQ
+   26         | NEQ
+
+   27 Node_and: AND
+
+   28 Node_or: OR
+
+   29 Node_assign: '='
+
+   30 BType: KW_VOID
+   31      | KW_INT
+   32      | KW_FLOAT
+
+   33 UnaryOp: '+'
+   34        | '-'
+   35        | '!'
+
+   36 CompUnitList: CompUnitList CompUnit
+   37             | CompUnit
+
+   38 CompUnit: Decl
+   39         | FuncDef
+
+   40 Decl: ConstDecl
+   41     | VarDecl
+
+   42 ConstDecl: Node_const BType ConstDefList Node_semicolon
+   43          | Node_const BType ConstDefList error Node_semicolon
+
+   44 ConstDefList: ConstDefList Node_comma ConstDef
+   45             | ConstDef
+
+   46 ConstDef: Node_ID ConstExpList Node_assign ConstInitVal
+   47         | Node_ID Node_assign ConstInitVal
+
+   48 ConstExpList: ConstExpList Node_open_bracket ConstExp Node_close_bracket
+   49             | Node_open_bracket ConstExp Node_close_bracket
+
+   50 ConstInitVal: ConstExp
+   51             | Node_open_brace ConstInitValList Node_close_brace
+   52             | Node_open_brace Node_close_brace
+
+   53 ConstInitValList: ConstInitValList Node_comma ConstInitVal
+   54                 | ConstInitVal
+
+   55 VarDecl: BType VarDefList Node_semicolon
+   56        | BType VarDefList error Node_semicolon
+
+   57 VarDefList: VarDefList Node_comma VarDef
+   58           | VarDef
+
+   59 VarDef: Node_ID ConstExpList Node_assign InitVal
+   60       | Node_ID Node_assign InitVal
+   61       | Node_ID ConstExpList
+   62       | Node_ID
+
+   63 InitVal: Exp
+   64        | Node_open_brace InitValList Node_close_brace
+   65        | Node_open_brace Node_close_brace
+
+   66 InitValList: InitValList Node_comma InitVal
+   67            | InitVal
+
+   68 FuncDef: BType Node_ID Node_open_paren FuncFParams Node_close_paren Block
+   69        | BType Node_ID Node_open_paren Node_close_paren Block
+
+   70 FuncFParams: FuncFParam Node_comma FuncFParams
+   71            | FuncFParam
+
+   72 FuncFParam: BType Node_ID Node_open_bracket Node_close_bracket ExpList
+   73           | BType Node_ID Node_open_bracket Node_close_bracket
+   74           | BType Node_ID
+
+   75 ExpList: ExpList Node_open_bracket Exp Node_close_bracket
+   76        | Node_open_bracket Exp Node_close_bracket
+   77        | ExpList Node_open_bracket Exp error Node_close_bracket
+   78        | Node_open_bracket Exp error Node_close_bracket
+
+   79 Block: Node_open_brace BlockItemList Node_close_brace
+   80      | Node_open_brace Node_close_brace
+
+   81 BlockItemList: BlockItemList BlockItem
+   82              | BlockItem
+
+   83 BlockItem: Decl
+   84          | Stmt
+
+   85 StmtOther: LVal Node_assign Exp Node_semicolon
+   86          | LVal Node_assign Exp error Node_semicolon
+   87          | Node_semicolon
+   88          | Exp Node_semicolon
+   89          | Exp error Node_semicolon
+   90          | Block
+   91          | Node_while Node_open_paren Cond Node_close_paren Stmt
+   92          | Node_jumpout Node_semicolon
+   93          | Node_return Exp Node_semicolon
+   94          | Node_return Node_semicolon
+   95          | Node_jumpout error Node_semicolon
+   96          | Node_return Exp error Node_semicolon
+   97          | Node_return error Node_semicolon
+
+   98 StmtMustELSE: StmtOther
+   99             | Node_if Node_open_paren Cond Node_close_paren StmtMustELSE Node_else StmtMustELSE
+
+  100 Stmt: StmtOther
+  101     | Node_if Node_open_paren Cond Node_close_paren StmtMustELSE Node_else Stmt
+  102     | Node_if Node_open_paren Cond Node_close_paren Stmt
+
+  103 Exp: AddExp
+
+  104 Cond: LOrExp
+
+  105 LVal: Node_ID ExpList
+  106     | Node_ID
+
+  107 PrimaryExp: Node_open_paren Cond Node_close_paren
+  108           | LVal
+  109           | INT_CONST
+  110           | FLOAT_CONST
+
+  111 UnaryExp: PrimaryExp
+  112         | Node_ID Node_open_paren FuncRParams Node_close_paren
+  113         | Node_ID Node_open_paren Node_close_paren
+  114         | UnaryOp UnaryExp
+
+  115 FuncRParams: Exp Node_comma FuncRParams
+  116            | Exp
+
+  117 MulExp: UnaryExp
+  118       | MulExp Node_mul_div_mod UnaryExp
+
+  119 AddExp: MulExp
+  120       | AddExp UnaryOp MulExp
+
+  121 RelExp: AddExp
+  122       | RelExp Node_lgeq AddExp
+
+  123 EqExp: RelExp
+  124      | EqExp Node_eqn RelExp
+
+  125 LAndExp: EqExp
+  126        | LAndExp Node_and EqExp
+
+  127 LOrExp: LAndExp
+  128       | LOrExp Node_or LAndExp
+
+  129 ConstExp: AddExp
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '!' (33) 35
+    '%' (37) 20
+    '(' (40) 14
+    ')' (41) 15
+    '*' (42) 18
+    '+' (43) 33
+    ',' (44) 17
+    '-' (45) 34
+    '/' (47) 19
+    ';' (59) 16
+    '<' (60) 21
+    '=' (61) 29
+    '>' (62) 22
+    '[' (91) 12
+    ']' (93) 13
+    '{' (123) 10
+    '}' (125) 11
+    error (256) 43 56 77 78 86 89 95 96 97
+    INT_CONST <int_val> (258) 109
+    FLOAT_CONST <float_val> (259) 110
+    IDENTIFIER <str_val> (260) 9
+    KW_CONST (261) 2
+    KW_INT (262) 31
+    KW_FLOAT (263) 32
+    KW_VOID (264) 30
+    KW_IF (265) 3
+    KW_ELSE (266) 4
+    KW_WHILE (267) 5
+    KW_BREAK (268) 6
+    KW_CONTINUE (269) 7
+    KW_RETURN (270) 8
+    LEQ (271) 23
+    GEQ (272) 24
+    EQ (273) 25
+    NEQ (274) 26
+    AND (275) 27
+    OR (276) 28
+
+
+Nonterminals, with rules where they appear
+
+    $accept (39)
+        on left: 0
+    Start <treeNode> (40)
+        on left: 1
+        on right: 0
+    Node_const <treeNode> (41)
+        on left: 2
+        on right: 42 43
+    Node_if <treeNode> (42)
+        on left: 3
+        on right: 99 101 102
+    Node_else <treeNode> (43)
+        on left: 4
+        on right: 99 101
+    Node_while <treeNode> (44)
+        on left: 5
+        on right: 91
+    Node_jumpout <treeNode> (45)
+        on left: 6 7
+        on right: 92 95
+    Node_return <treeNode> (46)
+        on left: 8
+        on right: 93 94 96 97
+    Node_ID <treeNode> (47)
+        on left: 9
+        on right: 46 47 59 60 61 62 68 69 72 73 74 105 106 112 113
+    Node_open_brace <treeNode> (48)
+        on left: 10
+        on right: 51 52 64 65 79 80
+    Node_close_brace <treeNode> (49)
+        on left: 11
+        on right: 51 52 64 65 79 80
+    Node_open_bracket <treeNode> (50)
+        on left: 12
+        on right: 48 49 72 73 75 76 77 78
+    Node_close_bracket <treeNode> (51)
+        on left: 13
+        on right: 48 49 72 73 75 76 77 78
+    Node_open_paren <treeNode> (52)
+        on left: 14
+        on right: 68 69 91 99 101 102 107 112 113
+    Node_close_paren <treeNode> (53)
+        on left: 15
+        on right: 68 69 91 99 101 102 107 112 113
+    Node_semicolon <treeNode> (54)
+        on left: 16
+        on right: 42 43 55 56 85 86 87 88 89 92 93 94 95 96 97
+    Node_comma <treeNode> (55)
+        on left: 17
+        on right: 44 53 57 66 70 115
+    Node_mul_div_mod <treeNode> (56)
+        on left: 18 19 20
+        on right: 118
+    Node_lgeq <treeNode> (57)
+        on left: 21 22 23 24
+        on right: 122
+    Node_eqn <treeNode> (58)
+        on left: 25 26
+        on right: 124
+    Node_and <treeNode> (59)
+        on left: 27
+        on right: 126
+    Node_or <treeNode> (60)
+        on left: 28
+        on right: 128
+    Node_assign <treeNode> (61)
+        on left: 29
+        on right: 46 47 59 60 85 86
+    BType <treeNode> (62)
+        on left: 30 31 32
+        on right: 42 43 55 56 68 69 72 73 74
+    UnaryOp <treeNode> (63)
+        on left: 33 34 35
+        on right: 114 120
+    CompUnitList <treeNode> (64)
+        on left: 36 37
+        on right: 1 36
+    CompUnit <treeNode> (65)
+        on left: 38 39
+        on right: 36 37
+    Decl <treeNode> (66)
+        on left: 40 41
+        on right: 38 83
+    ConstDecl <treeNode> (67)
+        on left: 42 43
+        on right: 40
+    ConstDefList <treeNode> (68)
+        on left: 44 45
+        on right: 42 43 44
+    ConstDef <treeNode> (69)
+        on left: 46 47
+        on right: 44 45
+    ConstExpList <treeNode> (70)
+        on left: 48 49
+        on right: 46 48 59 61
+    ConstInitVal <treeNode> (71)
+        on left: 50 51 52
+        on right: 46 47 53 54
+    ConstInitValList <treeNode> (72)
+        on left: 53 54
+        on right: 51 53
+    VarDecl <treeNode> (73)
+        on left: 55 56
+        on right: 41
+    VarDefList <treeNode> (74)
+        on left: 57 58
+        on right: 55 56 57
+    VarDef <treeNode> (75)
+        on left: 59 60 61 62
+        on right: 57 58
+    InitVal <treeNode> (76)
+        on left: 63 64 65
+        on right: 59 60 66 67
+    InitValList <treeNode> (77)
+        on left: 66 67
+        on right: 64 66
+    FuncDef <treeNode> (78)
+        on left: 68 69
+        on right: 39
+    FuncFParams <treeNode> (79)
+        on left: 70 71
+        on right: 68 70
+    FuncFParam <treeNode> (80)
+        on left: 72 73 74
+        on right: 70 71
+    ExpList <treeNode> (81)
+        on left: 75 76 77 78
+        on right: 72 75 77 105
+    Block <treeNode> (82)
+        on left: 79 80
+        on right: 68 69 90
+    BlockItemList <treeNode> (83)
+        on left: 81 82
+        on right: 79 81
+    BlockItem <treeNode> (84)
+        on left: 83 84
+        on right: 81 82
+    StmtOther <treeNode> (85)
+        on left: 85 86 87 88 89 90 91 92 93 94 95 96 97
+        on right: 98 100
+    StmtMustELSE <treeNode> (86)
+        on left: 98 99
+        on right: 99 101
+    Stmt <treeNode> (87)
+        on left: 100 101 102
+        on right: 84 91 101 102
+    Exp <treeNode> (88)
+        on left: 103
+        on right: 63 75 76 77 78 85 86 88 89 93 96 115 116
+    Cond <treeNode> (89)
+        on left: 104
+        on right: 91 99 101 102 107
+    LVal <treeNode> (90)
+        on left: 105 106
+        on right: 85 86 108
+    PrimaryExp <treeNode> (91)
+        on left: 107 108 109 110
+        on right: 111
+    UnaryExp <treeNode> (92)
+        on left: 111 112 113 114
+        on right: 114 117 118
+    FuncRParams <treeNode> (93)
+        on left: 115 116
+        on right: 112 115
+    MulExp <treeNode> (94)
+        on left: 117 118
+        on right: 118 119 120
+    AddExp <treeNode> (95)
+        on left: 119 120
+        on right: 103 120 121 122 129
+    RelExp <treeNode> (96)
+        on left: 121 122
+        on right: 122 123 124
+    EqExp <treeNode> (97)
+        on left: 123 124
+        on right: 124 125 126
+    LAndExp <treeNode> (98)
+        on left: 125 126
+        on right: 126 127 128
+    LOrExp <treeNode> (99)
+        on left: 127 128
+        on right: 104 128
+    ConstExp <treeNode> (100)
+        on left: 129
+        on right: 48 49 50
+
+
+State 0
+
+    0 $accept: . Start $end
+
+    KW_CONST  shift, and go to state 1
+    KW_INT    shift, and go to state 2
+    KW_FLOAT  shift, and go to state 3
+    KW_VOID   shift, and go to state 4
+
+    Start         go to state 5
+    Node_const    go to state 6
+    BType         go to state 7
+    CompUnitList  go to state 8
+    CompUnit      go to state 9
+    Decl          go to state 10
+    ConstDecl     go to state 11
+    VarDecl       go to state 12
+    FuncDef       go to state 13
+
+
+State 1
+
+    2 Node_const: KW_CONST .
+
+    $default  reduce using rule 2 (Node_const)
+
+
+State 2
+
+   31 BType: KW_INT .
+
+    $default  reduce using rule 31 (BType)
+
+
+State 3
+
+   32 BType: KW_FLOAT .
+
+    $default  reduce using rule 32 (BType)
+
+
+State 4
+
+   30 BType: KW_VOID .
+
+    $default  reduce using rule 30 (BType)
+
+
+State 5
+
+    0 $accept: Start . $end
+
+    $end  shift, and go to state 14
+
+
+State 6
+
+   42 ConstDecl: Node_const . BType ConstDefList Node_semicolon
+   43          | Node_const . BType ConstDefList error Node_semicolon
+
+    KW_INT    shift, and go to state 2
+    KW_FLOAT  shift, and go to state 3
+    KW_VOID   shift, and go to state 4
+
+    BType  go to state 15
+
+
+State 7
+
+   55 VarDecl: BType . VarDefList Node_semicolon
+   56        | BType . VarDefList error Node_semicolon
+   68 FuncDef: BType . Node_ID Node_open_paren FuncFParams Node_close_paren Block
+   69        | BType . Node_ID Node_open_paren Node_close_paren Block
+
+    IDENTIFIER  shift, and go to state 16
+
+    Node_ID     go to state 17
+    VarDefList  go to state 18
+    VarDef      go to state 19
+
+
+State 8
+
+    1 Start: CompUnitList .
+   36 CompUnitList: CompUnitList . CompUnit
+
+    KW_CONST  shift, and go to state 1
+    KW_INT    shift, and go to state 2
+    KW_FLOAT  shift, and go to state 3
+    KW_VOID   shift, and go to state 4
+
+    $default  reduce using rule 1 (Start)
+
+    Node_const  go to state 6
+    BType       go to state 7
+    CompUnit    go to state 20
+    Decl        go to state 10
+    ConstDecl   go to state 11
+    VarDecl     go to state 12
+    FuncDef     go to state 13
+
+
+State 9
+
+   37 CompUnitList: CompUnit .
+
+    $default  reduce using rule 37 (CompUnitList)
+
+
+State 10
+
+   38 CompUnit: Decl .
+
+    $default  reduce using rule 38 (CompUnit)
+
+
+State 11
+
+   40 Decl: ConstDecl .
+
+    $default  reduce using rule 40 (Decl)
+
+
+State 12
+
+   41 Decl: VarDecl .
+
+    $default  reduce using rule 41 (Decl)
+
+
+State 13
+
+   39 CompUnit: FuncDef .
+
+    $default  reduce using rule 39 (CompUnit)
+
+
+State 14
+
+    0 $accept: Start $end .
+
+    $default  accept
+
+
+State 15
+
+   42 ConstDecl: Node_const BType . ConstDefList Node_semicolon
+   43          | Node_const BType . ConstDefList error Node_semicolon
+
+    IDENTIFIER  shift, and go to state 16
+
+    Node_ID       go to state 21
+    ConstDefList  go to state 22
+    ConstDef      go to state 23
+
+
+State 16
+
+    9 Node_ID: IDENTIFIER .
+
+    $default  reduce using rule 9 (Node_ID)
+
+
+State 17
+
+   59 VarDef: Node_ID . ConstExpList Node_assign InitVal
+   60       | Node_ID . Node_assign InitVal
+   61       | Node_ID . ConstExpList
+   62       | Node_ID .
+   68 FuncDef: BType Node_ID . Node_open_paren FuncFParams Node_close_paren Block
+   69        | BType Node_ID . Node_open_paren Node_close_paren Block
+
+    '='  shift, and go to state 24
+    '['  shift, and go to state 25
+    '('  shift, and go to state 26
+
+    $default  reduce using rule 62 (VarDef)
+
+    Node_open_bracket  go to state 27
+    Node_open_paren    go to state 28
+    Node_assign        go to state 29
+    ConstExpList       go to state 30
+
+
+State 18
+
+   55 VarDecl: BType VarDefList . Node_semicolon
+   56        | BType VarDefList . error Node_semicolon
+   57 VarDefList: VarDefList . Node_comma VarDef
+
+    error  shift, and go to state 31
+    ';'    shift, and go to state 32
+    ','    shift, and go to state 33
+
+    Node_semicolon  go to state 34
+    Node_comma      go to state 35
+
+
+State 19
+
+   58 VarDefList: VarDef .
+
+    $default  reduce using rule 58 (VarDefList)
+
+
+State 20
+
+   36 CompUnitList: CompUnitList CompUnit .
+
+    $default  reduce using rule 36 (CompUnitList)
+
+
+State 21
+
+   46 ConstDef: Node_ID . ConstExpList Node_assign ConstInitVal
+   47         | Node_ID . Node_assign ConstInitVal
+
+    '='  shift, and go to state 24
+    '['  shift, and go to state 25
+
+    Node_open_bracket  go to state 27
+    Node_assign        go to state 36
+    ConstExpList       go to state 37
+
+
+State 22
+
+   42 ConstDecl: Node_const BType ConstDefList . Node_semicolon
+   43          | Node_const BType ConstDefList . error Node_semicolon
+   44 ConstDefList: ConstDefList . Node_comma ConstDef
+
+    error  shift, and go to state 38
+    ';'    shift, and go to state 32
+    ','    shift, and go to state 33
+
+    Node_semicolon  go to state 39
+    Node_comma      go to state 40
+
+
+State 23
+
+   45 ConstDefList: ConstDef .
+
+    $default  reduce using rule 45 (ConstDefList)
+
+
+State 24
+
+   29 Node_assign: '=' .
+
+    $default  reduce using rule 29 (Node_assign)
+
+
+State 25
+
+   12 Node_open_bracket: '[' .
+
+    $default  reduce using rule 12 (Node_open_bracket)
+
+
+State 26
+
+   14 Node_open_paren: '(' .
+
+    $default  reduce using rule 14 (Node_open_paren)
+
+
+State 27
+
+   49 ConstExpList: Node_open_bracket . ConstExp Node_close_bracket
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 53
+    ConstExp         go to state 54
+
+
+State 28
+
+   68 FuncDef: BType Node_ID Node_open_paren . FuncFParams Node_close_paren Block
+   69        | BType Node_ID Node_open_paren . Node_close_paren Block
+
+    KW_INT    shift, and go to state 2
+    KW_FLOAT  shift, and go to state 3
+    KW_VOID   shift, and go to state 4
+    ')'       shift, and go to state 55
+
+    Node_close_paren  go to state 56
+    BType             go to state 57
+    FuncFParams       go to state 58
+    FuncFParam        go to state 59
+
+
+State 29
+
+   60 VarDef: Node_ID Node_assign . InitVal
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_brace  go to state 61
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    InitVal          go to state 62
+    Exp              go to state 63
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 30
+
+   48 ConstExpList: ConstExpList . Node_open_bracket ConstExp Node_close_bracket
+   59 VarDef: Node_ID ConstExpList . Node_assign InitVal
+   61       | Node_ID ConstExpList .
+
+    '='  shift, and go to state 24
+    '['  shift, and go to state 25
+
+    $default  reduce using rule 61 (VarDef)
+
+    Node_open_bracket  go to state 65
+    Node_assign        go to state 66
+
+
+State 31
+
+   56 VarDecl: BType VarDefList error . Node_semicolon
+
+    ';'  shift, and go to state 32
+
+    Node_semicolon  go to state 67
+
+
+State 32
+
+   16 Node_semicolon: ';' .
+
+    $default  reduce using rule 16 (Node_semicolon)
+
+
+State 33
+
+   17 Node_comma: ',' .
+
+    $default  reduce using rule 17 (Node_comma)
+
+
+State 34
+
+   55 VarDecl: BType VarDefList Node_semicolon .
+
+    $default  reduce using rule 55 (VarDecl)
+
+
+State 35
+
+   57 VarDefList: VarDefList Node_comma . VarDef
+
+    IDENTIFIER  shift, and go to state 16
+
+    Node_ID  go to state 68
+    VarDef   go to state 69
+
+
+State 36
+
+   47 ConstDef: Node_ID Node_assign . ConstInitVal
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_brace  go to state 70
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    ConstInitVal     go to state 71
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 53
+    ConstExp         go to state 72
+
+
+State 37
+
+   46 ConstDef: Node_ID ConstExpList . Node_assign ConstInitVal
+   48 ConstExpList: ConstExpList . Node_open_bracket ConstExp Node_close_bracket
+
+    '='  shift, and go to state 24
+    '['  shift, and go to state 25
+
+    Node_open_bracket  go to state 65
+    Node_assign        go to state 73
+
+
+State 38
+
+   43 ConstDecl: Node_const BType ConstDefList error . Node_semicolon
+
+    ';'  shift, and go to state 32
+
+    Node_semicolon  go to state 74
+
+
+State 39
+
+   42 ConstDecl: Node_const BType ConstDefList Node_semicolon .
+
+    $default  reduce using rule 42 (ConstDecl)
+
+
+State 40
+
+   44 ConstDefList: ConstDefList Node_comma . ConstDef
+
+    IDENTIFIER  shift, and go to state 16
+
+    Node_ID   go to state 21
+    ConstDef  go to state 75
+
+
+State 41
+
+  109 PrimaryExp: INT_CONST .
+
+    $default  reduce using rule 109 (PrimaryExp)
+
+
+State 42
+
+  110 PrimaryExp: FLOAT_CONST .
+
+    $default  reduce using rule 110 (PrimaryExp)
+
+
+State 43
+
+   33 UnaryOp: '+' .
+
+    $default  reduce using rule 33 (UnaryOp)
+
+
+State 44
+
+   34 UnaryOp: '-' .
+
+    $default  reduce using rule 34 (UnaryOp)
+
+
+State 45
+
+   35 UnaryOp: '!' .
+
+    $default  reduce using rule 35 (UnaryOp)
+
+
+State 46
+
+  105 LVal: Node_ID . ExpList
+  106     | Node_ID .
+  112 UnaryExp: Node_ID . Node_open_paren FuncRParams Node_close_paren
+  113         | Node_ID . Node_open_paren Node_close_paren
+
+    '['  shift, and go to state 25
+    '('  shift, and go to state 26
+
+    $default  reduce using rule 106 (LVal)
+
+    Node_open_bracket  go to state 76
+    Node_open_paren    go to state 77
+    ExpList            go to state 78
+
+
+State 47
+
+  107 PrimaryExp: Node_open_paren . Cond Node_close_paren
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    Cond             go to state 79
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 80
+    RelExp           go to state 81
+    EqExp            go to state 82
+    LAndExp          go to state 83
+    LOrExp           go to state 84
+
+
+State 48
+
+  114 UnaryExp: UnaryOp . UnaryExp
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 85
+
+
+State 49
+
+  108 PrimaryExp: LVal .
+
+    $default  reduce using rule 108 (PrimaryExp)
+
+
+State 50
+
+  111 UnaryExp: PrimaryExp .
+
+    $default  reduce using rule 111 (UnaryExp)
+
+
+State 51
+
+  117 MulExp: UnaryExp .
+
+    $default  reduce using rule 117 (MulExp)
+
+
+State 52
+
+  118 MulExp: MulExp . Node_mul_div_mod UnaryExp
+  119 AddExp: MulExp .
+
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
+
+    $default  reduce using rule 119 (AddExp)
+
+    Node_mul_div_mod  go to state 89
+
+
+State 53
+
+  120 AddExp: AddExp . UnaryOp MulExp
+  129 ConstExp: AddExp .
+
+    '+'  shift, and go to state 43
+    '-'  shift, and go to state 44
+    '!'  shift, and go to state 45
+
+    $default  reduce using rule 129 (ConstExp)
+
+    UnaryOp  go to state 90
+
+
+State 54
+
+   49 ConstExpList: Node_open_bracket ConstExp . Node_close_bracket
+
+    ']'  shift, and go to state 91
+
+    Node_close_bracket  go to state 92
+
+
+State 55
+
+   15 Node_close_paren: ')' .
+
+    $default  reduce using rule 15 (Node_close_paren)
+
+
+State 56
+
+   69 FuncDef: BType Node_ID Node_open_paren Node_close_paren . Block
+
+    '{'  shift, and go to state 60
+
+    Node_open_brace  go to state 93
+    Block            go to state 94
+
+
+State 57
+
+   72 FuncFParam: BType . Node_ID Node_open_bracket Node_close_bracket ExpList
+   73           | BType . Node_ID Node_open_bracket Node_close_bracket
+   74           | BType . Node_ID
+
+    IDENTIFIER  shift, and go to state 16
+
+    Node_ID  go to state 95
+
+
+State 58
+
+   68 FuncDef: BType Node_ID Node_open_paren FuncFParams . Node_close_paren Block
+
+    ')'  shift, and go to state 55
+
+    Node_close_paren  go to state 96
+
+
+State 59
+
+   70 FuncFParams: FuncFParam . Node_comma FuncFParams
+   71            | FuncFParam .
+
+    ','  shift, and go to state 33
+
+    $default  reduce using rule 71 (FuncFParams)
+
+    Node_comma  go to state 97
+
+
+State 60
+
+   10 Node_open_brace: '{' .
+
+    $default  reduce using rule 10 (Node_open_brace)
+
+
+State 61
+
+   64 InitVal: Node_open_brace . InitValList Node_close_brace
+   65        | Node_open_brace . Node_close_brace
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '}'          shift, and go to state 98
+    '('          shift, and go to state 26
+
+    Node_ID           go to state 46
+    Node_open_brace   go to state 61
+    Node_close_brace  go to state 99
+    Node_open_paren   go to state 47
+    UnaryOp           go to state 48
+    InitVal           go to state 100
+    InitValList       go to state 101
+    Exp               go to state 63
+    LVal              go to state 49
+    PrimaryExp        go to state 50
+    UnaryExp          go to state 51
+    MulExp            go to state 52
+    AddExp            go to state 64
+
+
+State 62
+
+   60 VarDef: Node_ID Node_assign InitVal .
+
+    $default  reduce using rule 60 (VarDef)
+
+
+State 63
+
+   63 InitVal: Exp .
+
+    $default  reduce using rule 63 (InitVal)
+
+
+State 64
+
+  103 Exp: AddExp .
+  120 AddExp: AddExp . UnaryOp MulExp
+
+    '+'  shift, and go to state 43
+    '-'  shift, and go to state 44
+    '!'  shift, and go to state 45
+
+    $default  reduce using rule 103 (Exp)
+
+    UnaryOp  go to state 90
+
+
+State 65
+
+   48 ConstExpList: ConstExpList Node_open_bracket . ConstExp Node_close_bracket
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 53
+    ConstExp         go to state 102
+
+
+State 66
+
+   59 VarDef: Node_ID ConstExpList Node_assign . InitVal
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_brace  go to state 61
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    InitVal          go to state 103
+    Exp              go to state 63
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 67
+
+   56 VarDecl: BType VarDefList error Node_semicolon .
+
+    $default  reduce using rule 56 (VarDecl)
+
+
+State 68
+
+   59 VarDef: Node_ID . ConstExpList Node_assign InitVal
+   60       | Node_ID . Node_assign InitVal
+   61       | Node_ID . ConstExpList
+   62       | Node_ID .
+
+    '='  shift, and go to state 24
+    '['  shift, and go to state 25
+
+    $default  reduce using rule 62 (VarDef)
+
+    Node_open_bracket  go to state 27
+    Node_assign        go to state 29
+    ConstExpList       go to state 30
+
+
+State 69
+
+   57 VarDefList: VarDefList Node_comma VarDef .
+
+    $default  reduce using rule 57 (VarDefList)
+
+
+State 70
+
+   51 ConstInitVal: Node_open_brace . ConstInitValList Node_close_brace
+   52             | Node_open_brace . Node_close_brace
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '}'          shift, and go to state 98
+    '('          shift, and go to state 26
+
+    Node_ID           go to state 46
+    Node_open_brace   go to state 70
+    Node_close_brace  go to state 104
+    Node_open_paren   go to state 47
+    UnaryOp           go to state 48
+    ConstInitVal      go to state 105
+    ConstInitValList  go to state 106
+    LVal              go to state 49
+    PrimaryExp        go to state 50
+    UnaryExp          go to state 51
+    MulExp            go to state 52
+    AddExp            go to state 53
+    ConstExp          go to state 72
+
+
+State 71
+
+   47 ConstDef: Node_ID Node_assign ConstInitVal .
+
+    $default  reduce using rule 47 (ConstDef)
+
+
+State 72
+
+   50 ConstInitVal: ConstExp .
+
+    $default  reduce using rule 50 (ConstInitVal)
+
+
+State 73
+
+   46 ConstDef: Node_ID ConstExpList Node_assign . ConstInitVal
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_brace  go to state 70
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    ConstInitVal     go to state 107
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 53
+    ConstExp         go to state 72
+
+
+State 74
+
+   43 ConstDecl: Node_const BType ConstDefList error Node_semicolon .
+
+    $default  reduce using rule 43 (ConstDecl)
+
+
+State 75
+
+   44 ConstDefList: ConstDefList Node_comma ConstDef .
+
+    $default  reduce using rule 44 (ConstDefList)
+
+
+State 76
+
+   76 ExpList: Node_open_bracket . Exp Node_close_bracket
+   78        | Node_open_bracket . Exp error Node_close_bracket
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    Exp              go to state 108
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 77
+
+  112 UnaryExp: Node_ID Node_open_paren . FuncRParams Node_close_paren
+  113         | Node_ID Node_open_paren . Node_close_paren
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+    ')'          shift, and go to state 55
+
+    Node_ID           go to state 46
+    Node_open_paren   go to state 47
+    Node_close_paren  go to state 109
+    UnaryOp           go to state 48
+    Exp               go to state 110
+    LVal              go to state 49
+    PrimaryExp        go to state 50
+    UnaryExp          go to state 51
+    FuncRParams       go to state 111
+    MulExp            go to state 52
+    AddExp            go to state 64
+
+
+State 78
+
+   75 ExpList: ExpList . Node_open_bracket Exp Node_close_bracket
+   77        | ExpList . Node_open_bracket Exp error Node_close_bracket
+  105 LVal: Node_ID ExpList .
+
+    '['  shift, and go to state 25
+
+    $default  reduce using rule 105 (LVal)
+
+    Node_open_bracket  go to state 112
+
+
+State 79
+
+  107 PrimaryExp: Node_open_paren Cond . Node_close_paren
+
+    ')'  shift, and go to state 55
+
+    Node_close_paren  go to state 113
+
+
+State 80
+
+  120 AddExp: AddExp . UnaryOp MulExp
+  121 RelExp: AddExp .
+
+    '+'  shift, and go to state 43
+    '-'  shift, and go to state 44
+    '!'  shift, and go to state 45
+
+    $default  reduce using rule 121 (RelExp)
+
+    UnaryOp  go to state 90
+
+
+State 81
+
+  122 RelExp: RelExp . Node_lgeq AddExp
+  123 EqExp: RelExp .
+
+    '<'  shift, and go to state 114
+    '>'  shift, and go to state 115
+    LEQ  shift, and go to state 116
+    GEQ  shift, and go to state 117
+
+    $default  reduce using rule 123 (EqExp)
+
+    Node_lgeq  go to state 118
+
+
+State 82
+
+  124 EqExp: EqExp . Node_eqn RelExp
+  125 LAndExp: EqExp .
+
+    EQ   shift, and go to state 119
+    NEQ  shift, and go to state 120
+
+    $default  reduce using rule 125 (LAndExp)
+
+    Node_eqn  go to state 121
+
+
+State 83
+
+  126 LAndExp: LAndExp . Node_and EqExp
+  127 LOrExp: LAndExp .
+
+    AND  shift, and go to state 122
+
+    $default  reduce using rule 127 (LOrExp)
+
+    Node_and  go to state 123
+
+
+State 84
+
+  104 Cond: LOrExp .
+  128 LOrExp: LOrExp . Node_or LAndExp
+
+    OR  shift, and go to state 124
+
+    $default  reduce using rule 104 (Cond)
+
+    Node_or  go to state 125
+
+
+State 85
+
+  114 UnaryExp: UnaryOp UnaryExp .
+
+    $default  reduce using rule 114 (UnaryExp)
+
+
+State 86
+
+   18 Node_mul_div_mod: '*' .
+
+    $default  reduce using rule 18 (Node_mul_div_mod)
+
+
+State 87
+
+   19 Node_mul_div_mod: '/' .
+
+    $default  reduce using rule 19 (Node_mul_div_mod)
+
+
+State 88
+
+   20 Node_mul_div_mod: '%' .
+
+    $default  reduce using rule 20 (Node_mul_div_mod)
+
+
+State 89
+
+  118 MulExp: MulExp Node_mul_div_mod . UnaryExp
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 126
+
+
+State 90
+
+  120 AddExp: AddExp UnaryOp . MulExp
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 127
+
+
+State 91
+
+   13 Node_close_bracket: ']' .
+
+    $default  reduce using rule 13 (Node_close_bracket)
+
+
+State 92
+
+   49 ConstExpList: Node_open_bracket ConstExp Node_close_bracket .
+
+    $default  reduce using rule 49 (ConstExpList)
+
+
+State 93
+
+   79 Block: Node_open_brace . BlockItemList Node_close_brace
+   80      | Node_open_brace . Node_close_brace
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    KW_CONST     shift, and go to state 1
+    KW_INT       shift, and go to state 2
+    KW_FLOAT     shift, and go to state 3
+    KW_VOID      shift, and go to state 4
+    KW_IF        shift, and go to state 128
+    KW_WHILE     shift, and go to state 129
+    KW_BREAK     shift, and go to state 130
+    KW_CONTINUE  shift, and go to state 131
+    KW_RETURN    shift, and go to state 132
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '}'          shift, and go to state 98
+    '('          shift, and go to state 26
+    ';'          shift, and go to state 32
+
+    Node_const        go to state 6
+    Node_if           go to state 133
+    Node_while        go to state 134
+    Node_jumpout      go to state 135
+    Node_return       go to state 136
+    Node_ID           go to state 46
+    Node_open_brace   go to state 93
+    Node_close_brace  go to state 137
+    Node_open_paren   go to state 47
+    Node_semicolon    go to state 138
+    BType             go to state 139
+    UnaryOp           go to state 48
+    Decl              go to state 140
+    ConstDecl         go to state 11
+    VarDecl           go to state 12
+    Block             go to state 141
+    BlockItemList     go to state 142
+    BlockItem         go to state 143
+    StmtOther         go to state 144
+    Stmt              go to state 145
+    Exp               go to state 146
+    LVal              go to state 147
+    PrimaryExp        go to state 50
+    UnaryExp          go to state 51
+    MulExp            go to state 52
+    AddExp            go to state 64
+
+
+State 94
+
+   69 FuncDef: BType Node_ID Node_open_paren Node_close_paren Block .
+
+    $default  reduce using rule 69 (FuncDef)
+
+
+State 95
+
+   72 FuncFParam: BType Node_ID . Node_open_bracket Node_close_bracket ExpList
+   73           | BType Node_ID . Node_open_bracket Node_close_bracket
+   74           | BType Node_ID .
+
+    '['  shift, and go to state 25
+
+    $default  reduce using rule 74 (FuncFParam)
+
+    Node_open_bracket  go to state 148
+
+
+State 96
+
+   68 FuncDef: BType Node_ID Node_open_paren FuncFParams Node_close_paren . Block
+
+    '{'  shift, and go to state 60
+
+    Node_open_brace  go to state 93
+    Block            go to state 149
+
+
+State 97
+
+   70 FuncFParams: FuncFParam Node_comma . FuncFParams
+
+    KW_INT    shift, and go to state 2
+    KW_FLOAT  shift, and go to state 3
+    KW_VOID   shift, and go to state 4
+
+    BType        go to state 57
+    FuncFParams  go to state 150
+    FuncFParam   go to state 59
+
+
+State 98
+
+   11 Node_close_brace: '}' .
+
+    $default  reduce using rule 11 (Node_close_brace)
+
+
+State 99
+
+   65 InitVal: Node_open_brace Node_close_brace .
+
+    $default  reduce using rule 65 (InitVal)
+
+
+State 100
+
+   67 InitValList: InitVal .
+
+    $default  reduce using rule 67 (InitValList)
+
+
+State 101
+
+   64 InitVal: Node_open_brace InitValList . Node_close_brace
+   66 InitValList: InitValList . Node_comma InitVal
+
+    '}'  shift, and go to state 98
+    ','  shift, and go to state 33
+
+    Node_close_brace  go to state 151
+    Node_comma        go to state 152
+
+
+State 102
+
+   48 ConstExpList: ConstExpList Node_open_bracket ConstExp . Node_close_bracket
+
+    ']'  shift, and go to state 91
+
+    Node_close_bracket  go to state 153
+
+
+State 103
+
+   59 VarDef: Node_ID ConstExpList Node_assign InitVal .
+
+    $default  reduce using rule 59 (VarDef)
+
+
+State 104
+
+   52 ConstInitVal: Node_open_brace Node_close_brace .
+
+    $default  reduce using rule 52 (ConstInitVal)
+
+
+State 105
+
+   54 ConstInitValList: ConstInitVal .
+
+    $default  reduce using rule 54 (ConstInitValList)
+
+
+State 106
+
+   51 ConstInitVal: Node_open_brace ConstInitValList . Node_close_brace
+   53 ConstInitValList: ConstInitValList . Node_comma ConstInitVal
+
+    '}'  shift, and go to state 98
+    ','  shift, and go to state 33
+
+    Node_close_brace  go to state 154
+    Node_comma        go to state 155
+
+
+State 107
+
+   46 ConstDef: Node_ID ConstExpList Node_assign ConstInitVal .
+
+    $default  reduce using rule 46 (ConstDef)
+
+
+State 108
+
+   76 ExpList: Node_open_bracket Exp . Node_close_bracket
+   78        | Node_open_bracket Exp . error Node_close_bracket
+
+    error  shift, and go to state 156
+    ']'    shift, and go to state 91
+
+    Node_close_bracket  go to state 157
+
+
+State 109
+
+  113 UnaryExp: Node_ID Node_open_paren Node_close_paren .
+
+    $default  reduce using rule 113 (UnaryExp)
+
+
+State 110
+
+  115 FuncRParams: Exp . Node_comma FuncRParams
+  116            | Exp .
+
+    ','  shift, and go to state 33
+
+    $default  reduce using rule 116 (FuncRParams)
+
+    Node_comma  go to state 158
+
+
+State 111
+
+  112 UnaryExp: Node_ID Node_open_paren FuncRParams . Node_close_paren
+
+    ')'  shift, and go to state 55
+
+    Node_close_paren  go to state 159
+
+
+State 112
+
+   75 ExpList: ExpList Node_open_bracket . Exp Node_close_bracket
+   77        | ExpList Node_open_bracket . Exp error Node_close_bracket
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    Exp              go to state 160
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 113
+
+  107 PrimaryExp: Node_open_paren Cond Node_close_paren .
+
+    $default  reduce using rule 107 (PrimaryExp)
+
+
+State 114
+
+   21 Node_lgeq: '<' .
+
+    $default  reduce using rule 21 (Node_lgeq)
+
+
+State 115
+
+   22 Node_lgeq: '>' .
+
+    $default  reduce using rule 22 (Node_lgeq)
+
+
+State 116
+
+   23 Node_lgeq: LEQ .
+
+    $default  reduce using rule 23 (Node_lgeq)
+
+
+State 117
+
+   24 Node_lgeq: GEQ .
+
+    $default  reduce using rule 24 (Node_lgeq)
+
+
+State 118
+
+  122 RelExp: RelExp Node_lgeq . AddExp
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 161
+
+
+State 119
+
+   25 Node_eqn: EQ .
+
+    $default  reduce using rule 25 (Node_eqn)
+
+
+State 120
+
+   26 Node_eqn: NEQ .
+
+    $default  reduce using rule 26 (Node_eqn)
+
+
+State 121
+
+  124 EqExp: EqExp Node_eqn . RelExp
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 80
+    RelExp           go to state 162
+
+
+State 122
+
+   27 Node_and: AND .
+
+    $default  reduce using rule 27 (Node_and)
+
+
+State 123
+
+  126 LAndExp: LAndExp Node_and . EqExp
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 80
+    RelExp           go to state 81
+    EqExp            go to state 163
+
+
+State 124
+
+   28 Node_or: OR .
+
+    $default  reduce using rule 28 (Node_or)
+
+
+State 125
+
+  128 LOrExp: LOrExp Node_or . LAndExp
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 80
+    RelExp           go to state 81
+    EqExp            go to state 82
+    LAndExp          go to state 164
+
+
+State 126
+
+  118 MulExp: MulExp Node_mul_div_mod UnaryExp .
+
+    $default  reduce using rule 118 (MulExp)
+
+
+State 127
+
+  118 MulExp: MulExp . Node_mul_div_mod UnaryExp
+  120 AddExp: AddExp UnaryOp MulExp .
+
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
+
+    $default  reduce using rule 120 (AddExp)
+
+    Node_mul_div_mod  go to state 89
+
+
+State 128
+
+    3 Node_if: KW_IF .
+
+    $default  reduce using rule 3 (Node_if)
+
+
+State 129
+
+    5 Node_while: KW_WHILE .
+
+    $default  reduce using rule 5 (Node_while)
+
+
+State 130
+
+    6 Node_jumpout: KW_BREAK .
+
+    $default  reduce using rule 6 (Node_jumpout)
+
+
+State 131
+
+    7 Node_jumpout: KW_CONTINUE .
+
+    $default  reduce using rule 7 (Node_jumpout)
+
+
+State 132
+
+    8 Node_return: KW_RETURN .
+
+    $default  reduce using rule 8 (Node_return)
+
+
+State 133
+
+  101 Stmt: Node_if . Node_open_paren Cond Node_close_paren StmtMustELSE Node_else Stmt
+  102     | Node_if . Node_open_paren Cond Node_close_paren Stmt
+
+    '('  shift, and go to state 26
+
+    Node_open_paren  go to state 165
+
+
+State 134
+
+   91 StmtOther: Node_while . Node_open_paren Cond Node_close_paren Stmt
+
+    '('  shift, and go to state 26
+
+    Node_open_paren  go to state 166
+
+
+State 135
+
+   92 StmtOther: Node_jumpout . Node_semicolon
+   95          | Node_jumpout . error Node_semicolon
+
+    error  shift, and go to state 167
+    ';'    shift, and go to state 32
+
+    Node_semicolon  go to state 168
+
+
+State 136
+
+   93 StmtOther: Node_return . Exp Node_semicolon
+   94          | Node_return . Node_semicolon
+   96          | Node_return . Exp error Node_semicolon
+   97          | Node_return . error Node_semicolon
+
+    error        shift, and go to state 169
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+    ';'          shift, and go to state 32
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    Node_semicolon   go to state 170
+    UnaryOp          go to state 48
+    Exp              go to state 171
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 137
+
+   80 Block: Node_open_brace Node_close_brace .
+
+    $default  reduce using rule 80 (Block)
+
+
+State 138
+
+   87 StmtOther: Node_semicolon .
+
+    $default  reduce using rule 87 (StmtOther)
+
+
+State 139
+
+   55 VarDecl: BType . VarDefList Node_semicolon
+   56        | BType . VarDefList error Node_semicolon
+
+    IDENTIFIER  shift, and go to state 16
+
+    Node_ID     go to state 68
+    VarDefList  go to state 18
+    VarDef      go to state 19
+
+
+State 140
+
+   83 BlockItem: Decl .
+
+    $default  reduce using rule 83 (BlockItem)
+
+
+State 141
+
+   90 StmtOther: Block .
+
+    $default  reduce using rule 90 (StmtOther)
+
+
+State 142
+
+   79 Block: Node_open_brace BlockItemList . Node_close_brace
+   81 BlockItemList: BlockItemList . BlockItem
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    KW_CONST     shift, and go to state 1
+    KW_INT       shift, and go to state 2
+    KW_FLOAT     shift, and go to state 3
+    KW_VOID      shift, and go to state 4
+    KW_IF        shift, and go to state 128
+    KW_WHILE     shift, and go to state 129
+    KW_BREAK     shift, and go to state 130
+    KW_CONTINUE  shift, and go to state 131
+    KW_RETURN    shift, and go to state 132
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '}'          shift, and go to state 98
+    '('          shift, and go to state 26
+    ';'          shift, and go to state 32
+
+    Node_const        go to state 6
+    Node_if           go to state 133
+    Node_while        go to state 134
+    Node_jumpout      go to state 135
+    Node_return       go to state 136
+    Node_ID           go to state 46
+    Node_open_brace   go to state 93
+    Node_close_brace  go to state 172
+    Node_open_paren   go to state 47
+    Node_semicolon    go to state 138
+    BType             go to state 139
+    UnaryOp           go to state 48
+    Decl              go to state 140
+    ConstDecl         go to state 11
+    VarDecl           go to state 12
+    Block             go to state 141
+    BlockItem         go to state 173
+    StmtOther         go to state 144
+    Stmt              go to state 145
+    Exp               go to state 146
+    LVal              go to state 147
+    PrimaryExp        go to state 50
+    UnaryExp          go to state 51
+    MulExp            go to state 52
+    AddExp            go to state 64
+
+
+State 143
+
+   82 BlockItemList: BlockItem .
+
+    $default  reduce using rule 82 (BlockItemList)
+
+
+State 144
+
+  100 Stmt: StmtOther .
+
+    $default  reduce using rule 100 (Stmt)
+
+
+State 145
+
+   84 BlockItem: Stmt .
+
+    $default  reduce using rule 84 (BlockItem)
+
+
+State 146
+
+   88 StmtOther: Exp . Node_semicolon
+   89          | Exp . error Node_semicolon
+
+    error  shift, and go to state 174
+    ';'    shift, and go to state 32
+
+    Node_semicolon  go to state 175
+
+
+State 147
+
+   85 StmtOther: LVal . Node_assign Exp Node_semicolon
+   86          | LVal . Node_assign Exp error Node_semicolon
+  108 PrimaryExp: LVal .
+
+    '='  shift, and go to state 24
+
+    $default  reduce using rule 108 (PrimaryExp)
+
+    Node_assign  go to state 176
+
+
+State 148
+
+   72 FuncFParam: BType Node_ID Node_open_bracket . Node_close_bracket ExpList
+   73           | BType Node_ID Node_open_bracket . Node_close_bracket
+
+    ']'  shift, and go to state 91
+
+    Node_close_bracket  go to state 177
+
+
+State 149
+
+   68 FuncDef: BType Node_ID Node_open_paren FuncFParams Node_close_paren Block .
+
+    $default  reduce using rule 68 (FuncDef)
+
+
+State 150
+
+   70 FuncFParams: FuncFParam Node_comma FuncFParams .
+
+    $default  reduce using rule 70 (FuncFParams)
+
+
+State 151
+
+   64 InitVal: Node_open_brace InitValList Node_close_brace .
+
+    $default  reduce using rule 64 (InitVal)
+
+
+State 152
+
+   66 InitValList: InitValList Node_comma . InitVal
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_brace  go to state 61
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    InitVal          go to state 178
+    Exp              go to state 63
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 153
+
+   48 ConstExpList: ConstExpList Node_open_bracket ConstExp Node_close_bracket .
+
+    $default  reduce using rule 48 (ConstExpList)
+
+
+State 154
+
+   51 ConstInitVal: Node_open_brace ConstInitValList Node_close_brace .
+
+    $default  reduce using rule 51 (ConstInitVal)
+
+
+State 155
+
+   53 ConstInitValList: ConstInitValList Node_comma . ConstInitVal
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_brace  go to state 70
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    ConstInitVal     go to state 179
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 53
+    ConstExp         go to state 72
+
+
+State 156
+
+   78 ExpList: Node_open_bracket Exp error . Node_close_bracket
+
+    ']'  shift, and go to state 91
+
+    Node_close_bracket  go to state 180
+
+
+State 157
+
+   76 ExpList: Node_open_bracket Exp Node_close_bracket .
+
+    $default  reduce using rule 76 (ExpList)
+
+
+State 158
+
+  115 FuncRParams: Exp Node_comma . FuncRParams
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    Exp              go to state 110
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    FuncRParams      go to state 181
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 159
+
+  112 UnaryExp: Node_ID Node_open_paren FuncRParams Node_close_paren .
+
+    $default  reduce using rule 112 (UnaryExp)
+
+
+State 160
+
+   75 ExpList: ExpList Node_open_bracket Exp . Node_close_bracket
+   77        | ExpList Node_open_bracket Exp . error Node_close_bracket
+
+    error  shift, and go to state 182
+    ']'    shift, and go to state 91
+
+    Node_close_bracket  go to state 183
+
+
+State 161
+
+  120 AddExp: AddExp . UnaryOp MulExp
+  122 RelExp: RelExp Node_lgeq AddExp .
+
+    '+'  shift, and go to state 43
+    '-'  shift, and go to state 44
+    '!'  shift, and go to state 45
+
+    $default  reduce using rule 122 (RelExp)
+
+    UnaryOp  go to state 90
+
+
+State 162
+
+  122 RelExp: RelExp . Node_lgeq AddExp
+  124 EqExp: EqExp Node_eqn RelExp .
+
+    '<'  shift, and go to state 114
+    '>'  shift, and go to state 115
+    LEQ  shift, and go to state 116
+    GEQ  shift, and go to state 117
+
+    $default  reduce using rule 124 (EqExp)
+
+    Node_lgeq  go to state 118
+
+
+State 163
+
+  124 EqExp: EqExp . Node_eqn RelExp
+  126 LAndExp: LAndExp Node_and EqExp .
+
+    EQ   shift, and go to state 119
+    NEQ  shift, and go to state 120
+
+    $default  reduce using rule 126 (LAndExp)
+
+    Node_eqn  go to state 121
+
+
+State 164
+
+  126 LAndExp: LAndExp . Node_and EqExp
+  128 LOrExp: LOrExp Node_or LAndExp .
+
+    AND  shift, and go to state 122
+
+    $default  reduce using rule 128 (LOrExp)
+
+    Node_and  go to state 123
+
+
+State 165
+
+  101 Stmt: Node_if Node_open_paren . Cond Node_close_paren StmtMustELSE Node_else Stmt
+  102     | Node_if Node_open_paren . Cond Node_close_paren Stmt
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    Cond             go to state 184
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 80
+    RelExp           go to state 81
+    EqExp            go to state 82
+    LAndExp          go to state 83
+    LOrExp           go to state 84
+
+
+State 166
+
+   91 StmtOther: Node_while Node_open_paren . Cond Node_close_paren Stmt
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    Cond             go to state 185
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 80
+    RelExp           go to state 81
+    EqExp            go to state 82
+    LAndExp          go to state 83
+    LOrExp           go to state 84
+
+
+State 167
+
+   95 StmtOther: Node_jumpout error . Node_semicolon
+
+    ';'  shift, and go to state 32
+
+    Node_semicolon  go to state 186
+
+
+State 168
+
+   92 StmtOther: Node_jumpout Node_semicolon .
+
+    $default  reduce using rule 92 (StmtOther)
+
+
+State 169
+
+   97 StmtOther: Node_return error . Node_semicolon
+
+    ';'  shift, and go to state 32
+
+    Node_semicolon  go to state 187
+
+
+State 170
+
+   94 StmtOther: Node_return Node_semicolon .
+
+    $default  reduce using rule 94 (StmtOther)
+
+
+State 171
+
+   93 StmtOther: Node_return Exp . Node_semicolon
+   96          | Node_return Exp . error Node_semicolon
+
+    error  shift, and go to state 188
+    ';'    shift, and go to state 32
+
+    Node_semicolon  go to state 189
+
+
+State 172
+
+   79 Block: Node_open_brace BlockItemList Node_close_brace .
+
+    $default  reduce using rule 79 (Block)
+
+
+State 173
+
+   81 BlockItemList: BlockItemList BlockItem .
+
+    $default  reduce using rule 81 (BlockItemList)
+
+
+State 174
+
+   89 StmtOther: Exp error . Node_semicolon
+
+    ';'  shift, and go to state 32
+
+    Node_semicolon  go to state 190
+
+
+State 175
+
+   88 StmtOther: Exp Node_semicolon .
+
+    $default  reduce using rule 88 (StmtOther)
+
+
+State 176
+
+   85 StmtOther: LVal Node_assign . Exp Node_semicolon
+   86          | LVal Node_assign . Exp error Node_semicolon
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    Exp              go to state 191
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 177
+
+   72 FuncFParam: BType Node_ID Node_open_bracket Node_close_bracket . ExpList
+   73           | BType Node_ID Node_open_bracket Node_close_bracket .
+
+    '['  shift, and go to state 25
+
+    $default  reduce using rule 73 (FuncFParam)
+
+    Node_open_bracket  go to state 76
+    ExpList            go to state 192
+
+
+State 178
+
+   66 InitValList: InitValList Node_comma InitVal .
+
+    $default  reduce using rule 66 (InitValList)
+
+
+State 179
+
+   53 ConstInitValList: ConstInitValList Node_comma ConstInitVal .
+
+    $default  reduce using rule 53 (ConstInitValList)
+
+
+State 180
+
+   78 ExpList: Node_open_bracket Exp error Node_close_bracket .
+
+    $default  reduce using rule 78 (ExpList)
+
+
+State 181
+
+  115 FuncRParams: Exp Node_comma FuncRParams .
+
+    $default  reduce using rule 115 (FuncRParams)
+
+
+State 182
+
+   77 ExpList: ExpList Node_open_bracket Exp error . Node_close_bracket
+
+    ']'  shift, and go to state 91
+
+    Node_close_bracket  go to state 193
+
+
+State 183
+
+   75 ExpList: ExpList Node_open_bracket Exp Node_close_bracket .
+
+    $default  reduce using rule 75 (ExpList)
+
+
+State 184
+
+  101 Stmt: Node_if Node_open_paren Cond . Node_close_paren StmtMustELSE Node_else Stmt
+  102     | Node_if Node_open_paren Cond . Node_close_paren Stmt
+
+    ')'  shift, and go to state 55
+
+    Node_close_paren  go to state 194
+
+
+State 185
+
+   91 StmtOther: Node_while Node_open_paren Cond . Node_close_paren Stmt
+
+    ')'  shift, and go to state 55
+
+    Node_close_paren  go to state 195
+
+
+State 186
+
+   95 StmtOther: Node_jumpout error Node_semicolon .
+
+    $default  reduce using rule 95 (StmtOther)
+
+
+State 187
+
+   97 StmtOther: Node_return error Node_semicolon .
+
+    $default  reduce using rule 97 (StmtOther)
+
+
+State 188
+
+   96 StmtOther: Node_return Exp error . Node_semicolon
+
+    ';'  shift, and go to state 32
+
+    Node_semicolon  go to state 196
+
+
+State 189
+
+   93 StmtOther: Node_return Exp Node_semicolon .
+
+    $default  reduce using rule 93 (StmtOther)
+
+
+State 190
+
+   89 StmtOther: Exp error Node_semicolon .
+
+    $default  reduce using rule 89 (StmtOther)
+
+
+State 191
+
+   85 StmtOther: LVal Node_assign Exp . Node_semicolon
+   86          | LVal Node_assign Exp . error Node_semicolon
+
+    error  shift, and go to state 197
+    ';'    shift, and go to state 32
+
+    Node_semicolon  go to state 198
+
+
+State 192
+
+   72 FuncFParam: BType Node_ID Node_open_bracket Node_close_bracket ExpList .
+   75 ExpList: ExpList . Node_open_bracket Exp Node_close_bracket
+   77        | ExpList . Node_open_bracket Exp error Node_close_bracket
+
+    '['  shift, and go to state 25
+
+    $default  reduce using rule 72 (FuncFParam)
+
+    Node_open_bracket  go to state 112
+
+
+State 193
+
+   77 ExpList: ExpList Node_open_bracket Exp error Node_close_bracket .
+
+    $default  reduce using rule 77 (ExpList)
+
+
+State 194
+
+  101 Stmt: Node_if Node_open_paren Cond Node_close_paren . StmtMustELSE Node_else Stmt
+  102     | Node_if Node_open_paren Cond Node_close_paren . Stmt
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    KW_IF        shift, and go to state 128
+    KW_WHILE     shift, and go to state 129
+    KW_BREAK     shift, and go to state 130
+    KW_CONTINUE  shift, and go to state 131
+    KW_RETURN    shift, and go to state 132
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '('          shift, and go to state 26
+    ';'          shift, and go to state 32
+
+    Node_if          go to state 199
+    Node_while       go to state 134
+    Node_jumpout     go to state 135
+    Node_return      go to state 136
+    Node_ID          go to state 46
+    Node_open_brace  go to state 93
+    Node_open_paren  go to state 47
+    Node_semicolon   go to state 138
+    UnaryOp          go to state 48
+    Block            go to state 141
+    StmtOther        go to state 200
+    StmtMustELSE     go to state 201
+    Stmt             go to state 202
+    Exp              go to state 146
+    LVal             go to state 147
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 195
+
+   91 StmtOther: Node_while Node_open_paren Cond Node_close_paren . Stmt
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    KW_IF        shift, and go to state 128
+    KW_WHILE     shift, and go to state 129
+    KW_BREAK     shift, and go to state 130
+    KW_CONTINUE  shift, and go to state 131
+    KW_RETURN    shift, and go to state 132
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '('          shift, and go to state 26
+    ';'          shift, and go to state 32
+
+    Node_if          go to state 133
+    Node_while       go to state 134
+    Node_jumpout     go to state 135
+    Node_return      go to state 136
+    Node_ID          go to state 46
+    Node_open_brace  go to state 93
+    Node_open_paren  go to state 47
+    Node_semicolon   go to state 138
+    UnaryOp          go to state 48
+    Block            go to state 141
+    StmtOther        go to state 144
+    Stmt             go to state 203
+    Exp              go to state 146
+    LVal             go to state 147
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 196
+
+   96 StmtOther: Node_return Exp error Node_semicolon .
+
+    $default  reduce using rule 96 (StmtOther)
+
+
+State 197
+
+   86 StmtOther: LVal Node_assign Exp error . Node_semicolon
+
+    ';'  shift, and go to state 32
+
+    Node_semicolon  go to state 204
+
+
+State 198
+
+   85 StmtOther: LVal Node_assign Exp Node_semicolon .
+
+    $default  reduce using rule 85 (StmtOther)
+
+
+State 199
+
+   99 StmtMustELSE: Node_if . Node_open_paren Cond Node_close_paren StmtMustELSE Node_else StmtMustELSE
+  101 Stmt: Node_if . Node_open_paren Cond Node_close_paren StmtMustELSE Node_else Stmt
+  102     | Node_if . Node_open_paren Cond Node_close_paren Stmt
+
+    '('  shift, and go to state 26
+
+    Node_open_paren  go to state 205
+
+
+State 200
+
+   98 StmtMustELSE: StmtOther .
+  100 Stmt: StmtOther .
+
+    KW_ELSE   reduce using rule 98 (StmtMustELSE)
+    KW_ELSE   [reduce using rule 100 (Stmt)]
+    $default  reduce using rule 100 (Stmt)
+
+
+State 201
+
+  101 Stmt: Node_if Node_open_paren Cond Node_close_paren StmtMustELSE . Node_else Stmt
+
+    KW_ELSE  shift, and go to state 206
+
+    Node_else  go to state 207
+
+
+State 202
+
+  102 Stmt: Node_if Node_open_paren Cond Node_close_paren Stmt .
+
+    $default  reduce using rule 102 (Stmt)
+
+
+State 203
+
+   91 StmtOther: Node_while Node_open_paren Cond Node_close_paren Stmt .
+
+    $default  reduce using rule 91 (StmtOther)
+
+
+State 204
+
+   86 StmtOther: LVal Node_assign Exp error Node_semicolon .
+
+    $default  reduce using rule 86 (StmtOther)
+
+
+State 205
+
+   99 StmtMustELSE: Node_if Node_open_paren . Cond Node_close_paren StmtMustELSE Node_else StmtMustELSE
+  101 Stmt: Node_if Node_open_paren . Cond Node_close_paren StmtMustELSE Node_else Stmt
+  102     | Node_if Node_open_paren . Cond Node_close_paren Stmt
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '('          shift, and go to state 26
+
+    Node_ID          go to state 46
+    Node_open_paren  go to state 47
+    UnaryOp          go to state 48
+    Cond             go to state 208
+    LVal             go to state 49
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 80
+    RelExp           go to state 81
+    EqExp            go to state 82
+    LAndExp          go to state 83
+    LOrExp           go to state 84
+
+
+State 206
+
+    4 Node_else: KW_ELSE .
+
+    $default  reduce using rule 4 (Node_else)
+
+
+State 207
+
+  101 Stmt: Node_if Node_open_paren Cond Node_close_paren StmtMustELSE Node_else . Stmt
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    KW_IF        shift, and go to state 128
+    KW_WHILE     shift, and go to state 129
+    KW_BREAK     shift, and go to state 130
+    KW_CONTINUE  shift, and go to state 131
+    KW_RETURN    shift, and go to state 132
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '('          shift, and go to state 26
+    ';'          shift, and go to state 32
+
+    Node_if          go to state 133
+    Node_while       go to state 134
+    Node_jumpout     go to state 135
+    Node_return      go to state 136
+    Node_ID          go to state 46
+    Node_open_brace  go to state 93
+    Node_open_paren  go to state 47
+    Node_semicolon   go to state 138
+    UnaryOp          go to state 48
+    Block            go to state 141
+    StmtOther        go to state 144
+    Stmt             go to state 209
+    Exp              go to state 146
+    LVal             go to state 147
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 208
+
+   99 StmtMustELSE: Node_if Node_open_paren Cond . Node_close_paren StmtMustELSE Node_else StmtMustELSE
+  101 Stmt: Node_if Node_open_paren Cond . Node_close_paren StmtMustELSE Node_else Stmt
+  102     | Node_if Node_open_paren Cond . Node_close_paren Stmt
+
+    ')'  shift, and go to state 55
+
+    Node_close_paren  go to state 210
+
+
+State 209
+
+  101 Stmt: Node_if Node_open_paren Cond Node_close_paren StmtMustELSE Node_else Stmt .
+
+    $default  reduce using rule 101 (Stmt)
+
+
+State 210
+
+   99 StmtMustELSE: Node_if Node_open_paren Cond Node_close_paren . StmtMustELSE Node_else StmtMustELSE
+  101 Stmt: Node_if Node_open_paren Cond Node_close_paren . StmtMustELSE Node_else Stmt
+  102     | Node_if Node_open_paren Cond Node_close_paren . Stmt
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    KW_IF        shift, and go to state 128
+    KW_WHILE     shift, and go to state 129
+    KW_BREAK     shift, and go to state 130
+    KW_CONTINUE  shift, and go to state 131
+    KW_RETURN    shift, and go to state 132
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '('          shift, and go to state 26
+    ';'          shift, and go to state 32
+
+    Node_if          go to state 199
+    Node_while       go to state 134
+    Node_jumpout     go to state 135
+    Node_return      go to state 136
+    Node_ID          go to state 46
+    Node_open_brace  go to state 93
+    Node_open_paren  go to state 47
+    Node_semicolon   go to state 138
+    UnaryOp          go to state 48
+    Block            go to state 141
+    StmtOther        go to state 200
+    StmtMustELSE     go to state 211
+    Stmt             go to state 202
+    Exp              go to state 146
+    LVal             go to state 147
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 211
+
+   99 StmtMustELSE: Node_if Node_open_paren Cond Node_close_paren StmtMustELSE . Node_else StmtMustELSE
+  101 Stmt: Node_if Node_open_paren Cond Node_close_paren StmtMustELSE . Node_else Stmt
+
+    KW_ELSE  shift, and go to state 206
+
+    Node_else  go to state 212
+
+
+State 212
+
+   99 StmtMustELSE: Node_if Node_open_paren Cond Node_close_paren StmtMustELSE Node_else . StmtMustELSE
+  101 Stmt: Node_if Node_open_paren Cond Node_close_paren StmtMustELSE Node_else . Stmt
+
+    INT_CONST    shift, and go to state 41
+    FLOAT_CONST  shift, and go to state 42
+    IDENTIFIER   shift, and go to state 16
+    KW_IF        shift, and go to state 128
+    KW_WHILE     shift, and go to state 129
+    KW_BREAK     shift, and go to state 130
+    KW_CONTINUE  shift, and go to state 131
+    KW_RETURN    shift, and go to state 132
+    '+'          shift, and go to state 43
+    '-'          shift, and go to state 44
+    '!'          shift, and go to state 45
+    '{'          shift, and go to state 60
+    '('          shift, and go to state 26
+    ';'          shift, and go to state 32
+
+    Node_if          go to state 199
+    Node_while       go to state 134
+    Node_jumpout     go to state 135
+    Node_return      go to state 136
+    Node_ID          go to state 46
+    Node_open_brace  go to state 93
+    Node_open_paren  go to state 47
+    Node_semicolon   go to state 138
+    UnaryOp          go to state 48
+    Block            go to state 141
+    StmtOther        go to state 200
+    StmtMustELSE     go to state 213
+    Stmt             go to state 209
+    Exp              go to state 146
+    LVal             go to state 147
+    PrimaryExp       go to state 50
+    UnaryExp         go to state 51
+    MulExp           go to state 52
+    AddExp           go to state 64
+
+
+State 213
+
+   99 StmtMustELSE: Node_if Node_open_paren Cond Node_close_paren StmtMustELSE Node_else StmtMustELSE .
+
+    $default  reduce using rule 99 (StmtMustELSE)

@@ -1,0 +1,1 @@
+// #define LOGGING_FORMAT "Error type %s: %s at line %d\n"

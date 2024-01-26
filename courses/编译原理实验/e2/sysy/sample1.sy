@@ -1,0 +1,39 @@
+void main()
+{
+    int x = 5;
+    float y = 3.0;
+    {
+        float result;
+        result = +2.0;
+        result = (1 + 1);
+        result = x + y;
+        result = x - y;
+        result = x * y;
+        result = x / 2;
+        result = x % 2;
+        5 + 3;
+    }
+
+    int comparison;
+    int target = 1;
+    if (x != target)
+    {
+        comparison = 1;
+    }
+    else if (x <= target && 1)
+    {
+        comparison = 2;
+    }
+    else
+    {
+        target = 10;
+        if (x > target || !1)
+        {
+            comparison = 3;
+        }
+        else
+        {
+            comparison = 4;
+        }
+    }
+}
