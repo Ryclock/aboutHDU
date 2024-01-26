@@ -1,0 +1,38 @@
+;
+; BIND data file for local loopback interface
+;
+;$TTL	604800
+;@	IN	SOA	localhost. root.localhost. (
+;			      2		; Serial
+;			 604800		; Refresh
+;			  86400		; Retry
+;			2419200		; Expire
+;			 604800 )	; Negative Cache TTL
+;
+;@	IN	NS	localhost.
+;@	IN	A	127.0.0.1
+;@	IN	AAAA	::1
+$TTL 86400
+someschool.edu.cn. IN SOA dns1.someschool.edu.cn. admin.someschool.edu.cn. (
+        1
+        3h
+        1h
+        1w
+        1h)
+
+someschool.edu.cn. IN NS dns1.someschool.edu.cn.
+someschool.edu.cn. IN NS dns2.someschool.edu.cn.
+
+localhost.someschool.edu.cn. IN A 127.0.0.1
+dns1.someschool.edu.cn. IN A 192.168.188.137
+dns2.someschool.edu.cn. IN A 192.168.188.138
+web.someschool.edu.cn. IN A 192.168.188.3
+mail.someschool.edu.cn. IN A 192.168.188.4
+
+super1.someschool.edu.cn. IN A 192.168.188.103
+graph.someschool.edu.cn. IN A 192.168.188.111
+
+www.someschool.edu.cn. IN CNAME web.someschool.edu.cn.
+ftp.someschool.edu.cn. IN CNAME web.someschool.edu.cn.
+
+someschool.edu.cn. IN MX 10 mail.someschool.edu.cn.

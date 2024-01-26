@@ -1,0 +1,30 @@
+;
+; BIND data file for local loopback interface
+;
+;$TTL	604800
+;@	IN	SOA	localhost. root.localhost. (
+;			      2		; Serial
+;			 604800		; Refresh
+;			  86400		; Retry
+;			2419200		; Expire
+;			 604800 )	; Negative Cache TTL
+;
+;@	IN	NS	localhost.
+;@	IN	A	127.0.0.1
+;@	IN	AAAA	::1
+$TTL 86400
+
+188.168.192.in-addr.arpa. IN SOA dns1.someschool.edu.cn. admin.someschool.edu.cn. (
+        1
+        3h
+        1h
+        1w
+        1h)
+
+188.168.192.in-addr.arpa. IN NS dns1.someschool.edu.cn.
+188.168.192.in-addr.arpa. IN NS dns2.someschool.edu.cn.
+
+137.188.168.192.in-addr.arpa. IN PTR dns1.someschool.edu.cn.
+138.188.168.192.in-addr.arpa. IN PTR dns2.someschool.edu.cn.
+3.188.168.192.in-addr.arpa. IN PTR web.someschool.edu.cn.
+4.188.168.192.in-addr.arpa. IN PTR mail.someschool.edu.cn.
